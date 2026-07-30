@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row-between">
+  <h2>수식</h2>
+  <a class="btn" href="/formulas/new">+ 새 수식</a>
+</div>
+<p class="hint">수식은 스킬의 계산식으로 쓰입니다.</p>
+
+<table>
+  <tr><th>이름</th><th>수식</th><th>설명</th><th></th></tr>
+  {% for f in formulas %}
+  <tr>
+    <td><strong>{{ f.name }}</strong></td>
+    <td>{{ f.expression }}</td>
+    <td>{{ f.description }}</td>
+    <td>
+      <a href="/formulas/{{ f.id }}/edit">수정</a>
+      <form method="post" action="/formulas/{{ f.id }}/delete" style="display:inline" onsubmit="return confirm('삭제할까요?')">
+        <button type="submit" class="link-btn">삭제</button>
+      </form>
+    </td>
+  </tr>
+  {% endfor %}
+</table>
+{% endblock %}

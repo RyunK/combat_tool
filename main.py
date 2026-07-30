@@ -21,7 +21,7 @@ from engine.stat_calculator import compute_effective_stats, required_stats_for_g
 from engine.mod_loader import load_mods
 from engine.skill import execute_skill
 
-from router import  groups, characters, combat
+from router import  groups, characters, combat, formulas
 
 app = FastAPI(title="전투 GM 계산기")
 app.mount("/static", StaticFiles(directory="web/static"), name="static")
@@ -50,6 +50,7 @@ def index(request: Request):
 app.include_router(groups.router) # 그룹
 app.include_router(characters.router) # 캐릭터
 app.include_router(combat.router) # 전투 계산
+app.include_router(formulas.router) # 수식
 
 
 
