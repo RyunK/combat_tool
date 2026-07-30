@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row-between">
+  <h2>캐릭터</h2>
+  <a class="btn" href="/characters/new">+ 새 캐릭터</a>
+</div>
+
+<table>
+  <tr><th>이름</th><th>소속 그룹</th><th>유효 스탯</th><th>상태 수</th><th></th></tr>
+  {% for r in rows %}
+  <tr>
+    <td><a href="/characters/{{ r.char.id }}"><strong>{{ r.char.name }}</strong></a></td>
+    <td>{% for gn in r.group_names %}<span class="tag">{{ gn }}</span>{% endfor %}</td>
+    <td>{% for k, v in r.effective_stats.items() %}<span class="tag">{{ k }}: {{ "%.1f"|format(v) }}</span>{% endfor %}</td>
+    <td>{{ r.char.statuses | length }}</td>
+    <td><a href="/characters/{{ r.char.id }}">보기</a></td>
+  </tr>
+  {% endfor %}
+</table>
+{% endblock %}

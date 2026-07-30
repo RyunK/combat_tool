@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>{{ "캐릭터 수정" if character else "새 캐릭터" }}</h2>
+
+<form method="post" action="/characters/save">
+  {% if character %}<input type="hidden" name="id" value="{{ character.id }}">{% endif %}
+
+  <label>캐릭터 이름</label>
+  <input type="text" name="name" value="{{ character.name if character else '' }}" required>
+
+  <h3>소속 그룹</h3>
+  <p class="hint">그룹을 선택하면 그 그룹이 요구하는 스탯이 아래 표에 자동으로 추가됩니다. (진영 + 역할 등 여러 개 동시 선택 가능)</p>
+  <div class="group-checks">
+    {% for g in groups %}
+    <label class="checkbox-pill">
+      <input type="checkbox" name="group_ids" value="{{ g.id }}"
+        onchange="onGroupToggle()"
+        {% if character and g.id in character.group_ids %}checked{% endif %}>
+      {{ g.name }} {% if g.category %}<span class="cat">[{{ g.category }}]</span>{% endif %}
+    </label>
+    {% endfor %}
+  </div>
+
+  <h3>스탯</h3>
+  <div id="stat-rows"></div>
+  <button type="button" class="btn-secondary" onclick="addStatRow()">+ 커스텀 스탯 추가</button>
+
+  <div class="form-actions">
+    <button type="submit" class="btn">저장</button>
+    <a href="/characters" class="btn-secondary">취소</a>
+  </div>
+</form>
+
+<script>
+const GROUPS = {{ groups | tojson }};
+const EXISTING_STATS = {{ (character.base_stats if character else {}) | tojson }};
+
+function addStatRow(name, value) {
+  const container = document.getElementById('stat-rows');
+  const row = document.createElement('div');
+  row.className = 'dyn-row';
+  row.innerHTML = `
+    <input type="text" name="stat_name" placeholder="스탯 이름" value="${name || ''}">
+    <input type="number" step="any" name="stat_value" placeholder="값" value="${value !== undefined ? value : ''}">
+    <button type="button" onclick="this.parentElement.remove()">✕</button>
+  `;
+  container.appendChild(row);
+}
+
+function currentStatNames() {
+  return Array.from(document.querySelectorAll('input[name="stat_name"]')).map(i => i.value);
+}
+
+function onGroupToggle() {
+  const checked = Array.from(document.querySelectorAll('input[name="group_ids"]:checked')).map(i => i.value);
+  const have = currentStatNames();
+  checked.forEach(gid => {
+    const g = GROUPS.find(g => g.id === gid);
+    if (!g) return;
+    g.stat_schema.forEach(sd => {
+      if (!have.includes(sd.name)) {
+        addStatRow(sd.name, sd.default);
+        have.push(sd.name);
+      }
+    });
+  });
+}
+
+// 초기화: 기존 캐릭터면 저장된 스탯을 먼저 채우고, 없으면 선택된 그룹 기준으로 채운다.
+if (Object.keys(EXISTING_STATS).length > 0) {
+  Object.entries(EXISTING_STATS).forEach(([k, v]) => addStatRow(k, v));
+} else {
+  onGroupToggle();
+}
+</script>
+{% endblock %}

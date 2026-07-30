@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>전투 계산</h2>
+<p class="hint">다른 플랫폼(디스코드 등)으로 접수한 플레이어 선언을 여기서 시전자/대상/스킬로 설정해 계산합니다.</p>
+
+<form method="post" action="/combat/execute" class="inline-form">
+  <select name="caster_id" required>
+    <option value="">-- 시전자 --</option>
+    {% for c in characters %}<option value="{{ c.id }}">{{ c.name }}</option>{% endfor %}
+  </select>
+  <select name="target_id" required>
+    <option value="">-- 대상 --</option>
+    {% for c in characters %}<option value="{{ c.id }}">{{ c.name }}</option>{% endfor %}
+  </select>
+  <select name="skill_id" required>
+    <option value="">-- 스킬 --</option>
+    {% for s in skills %}<option value="{{ s.id }}">{{ s.name }} ({{ s._pack }})</option>{% endfor %}
+  </select>
+  <button type="submit" class="btn">계산</button>
+</form>
+
+{% if error %}
+<div class="error">{{ error }}</div>
+{% endif %}
+
+{% if result %}
+<h3>결과: {{ caster_name }} → {{ target_name }} ({{ result.skill_name }})</h3>
+<table>
+  <tr><th>사용 공식</th><td>{{ result.formula_id }}</td></tr>
+  <tr><th>수식</th><td><code>{{ result.expression }}</code></td></tr>
+  <tr><th>대입된 변수</th><td>{% for k, v in result.variables.items() %}<span class="tag">{{ k }}={{ "%.2f"|format(v) }}</span>{% endfor %}</td></tr>
+  <tr><th>결과값</th><td class="result-value">{{ "%.2f"|format(result.result) }}</td></tr>
+</table>
+
+<details>
+  <summary>계산에 사용된 유효 스탯 보기</summary>
+  <p><strong>{{ caster_name }}</strong>: {% for k, v in caster_stats.items() %}<span class="tag">{{ k }}: {{ "%.1f"|format(v) }}</span>{% endfor %}</p>
+  <p><strong>{{ target_name }}</strong>: {% for k, v in target_stats.items() %}<span class="tag">{{ k }}: {{ "%.1f"|format(v) }}</span>{% endfor %}</p>
+</details>
+{% endif %}
+
+<h3>사용 가능한 스킬 목록</h3>
+<table>
+  <tr><th>이름</th><th>id</th><th>공식</th><th>모드팩</th></tr>
+  {% for s in skills %}
+  <tr><td>{{ s.name }}</td><td>{{ s.id }}</td><td>{{ s.formula }}</td><td>{{ s._pack }}</td></tr>
+  {% endfor %}
+</table>
+{% endblock %}

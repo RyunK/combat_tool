@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="cards">
+  <div class="card"><div class="card-num">{{ group_count }}</div><div>그룹</div></div>
+  <div class="card"><div class="card-num">{{ char_count }}</div><div>캐릭터</div></div>
+  <div class="card"><div class="card-num">{{ formula_count }}</div><div>로드된 공식</div></div>
+  <div class="card"><div class="card-num">{{ skill_count }}</div><div>로드된 스킬</div></div>
+</div>
+
+<h2>설치된 모드팩</h2>
+<table>
+  <tr><th>이름</th><th>버전</th><th>작성자</th><th>설명</th></tr>
+  {% for m in manifests %}
+  <tr>
+    <td>{{ m.name }}</td><td>{{ m.version }}</td><td>{{ m.author }}</td><td>{{ m.description }}</td>
+  </tr>
+  {% endfor %}
+</table>
+
+<h2>빠른 시작</h2>
+<ol>
+  <li><a href="/groups/new">그룹 만들기</a> - 진영(플레이어팀/몬스터팀)이나 역할(탱커/힐러/딜러)을 정의하고 필요한 스탯, 그룹 전체 버프를 지정합니다.</li>
+  <li><a href="/characters/new">캐릭터 만들기</a> - 그룹을 선택하면 필요한 스탯 입력칸이 자동으로 생깁니다.</li>
+  <li><a href="/combat">전투 계산</a> - 시전자/대상/스킬을 골라 대미지를 계산합니다.</li>
+</ol>
+<p class="hint">새 스킬이나 대미지 공식을 추가하려면 <code>mods/</code> 폴더 안에 JSON 파일을 추가하면 됩니다 (서버 재시작 없이 요청마다 다시 로드됩니다).</p>
+{% endblock %}

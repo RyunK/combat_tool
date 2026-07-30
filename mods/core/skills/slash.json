@@ -1,0 +1,11 @@
+{
+  "id": "slash",
+  "name": "베기",
+  "formula": "physical_basic",
+  "variables": {
+    "atk": "STR",
+    "multiplier": 1.2,
+    "defense": "target.DEF"
+  },
+  "tags": ["physical"]
+}
