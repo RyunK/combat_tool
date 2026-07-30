@@ -30,8 +30,8 @@ templates = Jinja2Templates(directory="web/templates")
 storage = Storage("data")
 
 
-def get_groups_by_id() -> dict[str, Group]:
-    return {g["id"]: Group(**g) for g in storage.get_groups()}
+# def get_groups_by_id() -> dict[str, Group]:
+#     return {g["id"]: Group(**g) for g in storage.get_groups()}
 
 
 # ---------------------------------------------------------------- 대시보드

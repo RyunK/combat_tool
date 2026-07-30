@@ -10,7 +10,7 @@ from engine.stat_calculator import compute_effective_stats, required_stats_for_g
 from engine.mod_loader import load_mods
 from engine.skill import execute_skill
 
-from functions.groups_function import get_groups_by_id
+from router.functions.groups_function import get_groups_by_id
 
 
 router = APIRouter()

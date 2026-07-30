@@ -10,7 +10,7 @@ from engine.models import Group, Character, StatusEffect, StatDefinition, new_id
 from engine.storage import Storage
 from engine.stat_calculator import compute_effective_stats, required_stats_for_groups
 
-from functions.groups_function import get_groups_by_id
+from router.functions.groups_function import get_groups_by_id
 
 router = APIRouter()
 templates = Jinja2Templates(directory="web/templates")
