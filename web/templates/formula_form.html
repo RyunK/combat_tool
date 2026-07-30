@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>{{ "그룹 수정" if group else "새 그룹" }}</h2>
+
+<form method="post" action="/groups/save">
+  {% if group %}<input type="hidden" name="id" value="{{ group.id }}">{% endif %}
+
+  <label>그룹 이름</label>
+  <input type="text" name="name" value="{{ group.name if group else '' }}" required>
+
+  <label>분류 (category) - 자유롭게 입력. 예: faction, role, species</label>
+  <input type="text" name="category" value="{{ group.category if group else '' }}" placeholder="예: faction / role / species">
+
+  <h3>요구 스탯 (stat schema)</h3>
+  <p class="hint">이 그룹에 속한 캐릭터가 가져야 할 스탯과 기본값입니다. 예: 탱커 그룹 → HP(기본 150), DEF(기본 10)</p>
+  <div id="stat-schema-rows"></div>
+  <button type="button" class="btn-secondary" onclick="addStatRow()">+ 요구 스탯 추가</button>
+
+  <h3>그룹 전체 상태 (statuses)</h3>
+  <p class="hint">이 그룹 소속 캐릭터 전원에게 자동으로 적용되는 상태입니다. 예: 탱커는 HP +20%</p>
+  <div id="status-rows"></div>
+  <button type="button" class="btn-secondary" onclick="addStatusRow()">+ 그룹 상태 추가</button>
+
+  <div class="form-actions">
+    <button type="submit" class="btn">저장</button>
+    <a href="/groups" class="btn-secondary">취소</a>
+  </div>
+</form>
+
+<script>
+function addStatRow(name, def) {
+  const container = document.getElementById('stat-schema-rows');
+  const row = document.createElement('div');
+  row.className = 'dyn-row';
+  row.innerHTML = `
+    <input type="text" name="stat_name" placeholder="스탯 이름 (예: HP)" value="${name || ''}">
+    <input type="number" step="any" name="stat_default" placeholder="기본값" value="${def !== undefined ? def : ''}">
+    <button type="button" onclick="this.parentElement.remove()">✕</button>
+  `;
+  container.appendChild(row);
+}
+
+function addStatusRow(s) {
+  s = s || {};
+  const container = document.getElementById('status-rows');
+  const row = document.createElement('div');
+  row.className = 'dyn-row';
+  row.innerHTML = `
+    <input type="text" name="status_name" placeholder="상태 이름 (예: 탱커 체력보정)" value="${s.name || ''}">
+    <input type="text" name="status_target" placeholder="대상 스탯 (예: HP)" value="${s.target || ''}">
+    <select name="status_mode">
+      <option value="flat" ${s.mode === 'flat' ? 'selected' : ''}>flat(고정값)</option>
+      <option value="percent" ${s.mode === 'percent' ? 'selected' : ''}>percent(%)</option>
+    </select>
+    <input type="number" step="any" name="status_value" placeholder="값" value="${s.value !== undefined ? s.value : ''}">
+    <input type="number" name="status_duration" placeholder="지속턴(비우면 무한)" value="${s.duration !== undefined && s.duration !== null ? s.duration : ''}">
+    <input type="text" name="status_source" placeholder="출처(선택)" value="${s.source || ''}">
+    <button type="button" onclick="this.parentElement.remove()">✕</button>
+  `;
+  container.appendChild(row);
+}
+
+{% if group %}
+  {% for sd in group.stat_schema %}
+  addStatRow("{{ sd.name }}", {{ sd.default }});
+  {% endfor %}
+  {% for s in group.statuses %}
+  addStatusRow({{ s | tojson }});
+  {% endfor %}
+{% else %}
+  addStatRow(); addStatusRow();
+{% endif %}
+</script>
+{% endblock %}

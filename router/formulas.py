@@ -21,15 +21,15 @@ def formulas_list(request: Request):
     return templates.TemplateResponse("formulas_list.html", {"request": request, "formulas": formulas})
 
 
-@router.get("/groups/new")
+@router.get("/formulas/new")
 def group_new_form(request: Request):
-    return templates.TemplateResponse("group_form.html", {"request": request, "group": None})
+    return templates.TemplateResponse("formula_form.html", {"request": request, "group": None})
 
 
-@router.get("/groups/{gid}/edit")
+@router.get("/formulas/{gid}/edit")
 def group_edit_form(request: Request, gid: str):
     group = storage.get_group(gid)
-    return templates.TemplateResponse("group_form.html", {"request": request, "group": group})
+    return templates.TemplateResponse("formula_form.html", {"request": request, "group": group})
 
 
 @router.post("/groups/save")
@@ -68,10 +68,10 @@ async def group_save(request: Request):
         statuses=statuses,
     )
     storage.save_group(group.model_dump())
-    return RedirectResponse("/groups", status_code=303)
+    return RedirectResponse("/formulas", status_code=303)
 
 
-@router.post("/groups/{gid}/delete")
+@router.post("/formulas/{gid}/delete")
 def group_delete(gid: str):
     storage.delete_group(gid)
-    return RedirectResponse("/groups", status_code=303)
+    return RedirectResponse("/formulas", status_code=303)
