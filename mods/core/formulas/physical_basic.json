@@ -1,6 +1,0 @@
-{
-  "id": "physical_basic",
-  "name": "기본 물리 대미지",
-  "expression": "max(0, atk * multiplier - defense * 0.5)",
-  "description": "공격력에 배율을 곱하고 방어력의 절반을 뺀다. 결과는 0 미만이 되지 않는다."
-}

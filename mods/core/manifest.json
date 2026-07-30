@@ -1,6 +1,0 @@
-{
-  "name": "core",
-  "version": "0.1.0",
-  "author": "built-in",
-  "description": "기본 제공 예시 공식/스킬 모드팩. 새 모드팩을 만들 땐 mods/ 아래에 폴더를 하나 더 만들고 이 구조(manifest.json, formulas/, skills/)를 그대로 따라하면 됩니다."
-}
