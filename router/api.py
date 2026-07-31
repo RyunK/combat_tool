@@ -13,6 +13,7 @@ from __future__ import annotations
 from fastapi import APIRouter
 
 from engine.models import Character
+from engine.mod_loader import load_mods
 from engine.stat_calculator import compute_effective_stats
 from .deps import storage, get_groups_by_id
 
@@ -35,3 +36,14 @@ def api_characters_list():
             "status_count": len(char.statuses),
         })
     return result
+
+@router.get("/dashboard")
+def api_dashboard():
+    formulas, skills, manifests = load_mods("mods")
+    return {
+        "group_count": len(storage.get_groups()),
+        "char_count": len(storage.get_characters()),
+        "formula_count": len(formulas),
+        "skill_count": len(skills),
+        "manifests": manifests,
+    }

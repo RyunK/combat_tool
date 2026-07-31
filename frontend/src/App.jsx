@@ -1,16 +1,32 @@
+/**
+ * 여러 페이지를 오가야 하니 react-router-dom의 BrowserRouter를 씁니다.
+ *
+ * basename 이 dev/build에 따라 달라지는 이유:
+ * - 개발 중(npm run dev)엔 vite가 5173번 포트의 루트("/")에서 앱을 서빙합니다.
+ * - 빌드 후엔 FastAPI가 "/app" 경로 밑에서 서빙합니다 (main.py의 @app.get("/app") 참고).
+ * 그래서 라우터가 "지금 내가 어느 경로 밑에 붙어있는지"를 알아야 링크가 안 깨집니다.
+ */
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import Nav from './Nav'
+import Dashboard from './Dashboard'
 import CharacterList from './CharacterList'
 import './App.css'
 
+const basename = import.meta.env.DEV ? '/' : '/app'
+
 function App() {
   return (
-    <div className="app-shell">
-      <header>
-        <h1>⚔️ 전투 GM 계산기 (React 시범 페이지)</h1>
-      </header>
-      <main>
-        <CharacterList />
-      </main>
-    </div>
+    <BrowserRouter basename={basename}>
+      <div className="app-shell">
+        <Nav />
+        <main>
+          <Routes>
+            <Route path="/" element={<Dashboard />} />
+            <Route path="/characters" element={<CharacterList />} />
+          </Routes>
+        </main>
+      </div>
+    </BrowserRouter>
   )
 }
 
