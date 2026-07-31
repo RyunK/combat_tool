@@ -7,15 +7,15 @@
 
   --surface-soft: #F4D9BA;       /* ← theader / 토큰 배경. 채도 올린 웜톤 살구색 */
 
-  --primary: #C17F4E;            /* 라벤더 → 테라코타 톤으로 전환 */
-  --primary-dark: #9C6238;
+  --primary: #285943;            /* 라벤더 → 테라코타 톤으로 전환 */
+  --primary-dark: #285943;
   --pink: #D99A87;
   --mint: #B7A66B;               /* 민트는 웜톤과 안 어울려서 올리브골드로 대체 */
   --coral: #D97B5C;
 
-  --text: #4A3F38;
-  --text-muted: #A69384;
-  --border: #E8D9C8;
+  --text: #285943;
+  --text-muted: #77AF9C;
+  --border: #D7FFF1;
 
   --radius-sm: 10px;
   --radius-md: 16px;
