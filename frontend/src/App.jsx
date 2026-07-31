@@ -10,6 +10,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import Nav from './components/Nav'
 import Dashboard from './pages/Dashboard'
 import CharacterList from './pages/CharacterList'
+import GroupList from './pages/GroupList'
 import './App.css'
 
 const basename = import.meta.env.DEV ? '/' : '/app'
@@ -23,6 +24,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Dashboard />} />
             <Route path="/characters" element={<CharacterList />} />
+            <Route path="/groups" element={<GroupList />} />
           </Routes>
         </main>
       </div>
