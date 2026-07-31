@@ -56,7 +56,7 @@ function Dashboard() {
 
       <h2>빠른 시작</h2>
       <ul className="quick-links">
-        <li><a href={backendUrl('/groups/new')}>그룹 만들기</a> (아직 기존 화면)</li>
+        <li><Link to="/groups">그룹 목록 보기</Link> (React로 옮겨진 화면)</li>
         <li><Link to="/characters">캐릭터 목록 보기</Link> (React로 옮겨진 화면)</li>
         <li><a href={backendUrl('/combat')}>전투 계산</a> (아직 기존 화면)</li>
       </ul>

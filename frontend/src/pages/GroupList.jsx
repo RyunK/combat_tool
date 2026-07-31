@@ -50,7 +50,7 @@ function GroupList() {
             <th>이름</th>
             <th>분류</th>
             <th>요구 스탯</th>
-            <th>상태 수</th>
+            <th>그룹 상태</th>
           </tr>
         </thead>
         <tbody>
