@@ -1,38 +1,30 @@
-from __future__ import annotations
-from fastapi import APIRouter, Depends
-
-from fastapi import FastAPI, Request, Form
+from fastapi import APIRouter, Request
 from fastapi.responses import RedirectResponse
-from fastapi.staticfiles import StaticFiles
-from fastapi.templating import Jinja2Templates
 
-from engine.models import Group, Character, StatusEffect, StatDefinition, new_id
-from engine.storage import Storage
+from engine.models import Group, StatDefinition, StatusEffect, new_id
+from .deps import storage, templates
+
+router = APIRouter(prefix="/groups", tags=["groups"])
 
 
-templates = Jinja2Templates(directory="web/templates")
-
-storage = Storage("data")
-router = APIRouter()
-
-@router.get("/groups")
+@router.get("")
 def groups_list(request: Request):
     groups = storage.get_groups()
     return templates.TemplateResponse("groups_list.html", {"request": request, "groups": groups})
 
 
-@router.get("/groups/new")
+@router.get("/new")
 def group_new_form(request: Request):
     return templates.TemplateResponse("group_form.html", {"request": request, "group": None})
 
 
-@router.get("/groups/{gid}/edit")
+@router.get("/{gid}/edit")
 def group_edit_form(request: Request, gid: str):
     group = storage.get_group(gid)
     return templates.TemplateResponse("group_form.html", {"request": request, "group": group})
 
 
-@router.post("/groups/save")
+@router.post("/save")
 async def group_save(request: Request):
     form = await request.form()
     gid = form.get("id") or None
@@ -71,7 +63,7 @@ async def group_save(request: Request):
     return RedirectResponse("/groups", status_code=303)
 
 
-@router.post("/groups/{gid}/delete")
+@router.post("/{gid}/delete")
 def group_delete(gid: str):
     storage.delete_group(gid)
     return RedirectResponse("/groups", status_code=303)

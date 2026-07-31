@@ -1,22 +1,14 @@
-from __future__ import annotations
-
-
-from fastapi import APIRouter, Depends
-from fastapi import FastAPI, Request, Form
+from fastapi import APIRouter, Request
 from fastapi.responses import RedirectResponse
-from fastapi.templating import Jinja2Templates
 
-from engine.models import Group, Character, StatusEffect, StatDefinition, new_id
-from engine.storage import Storage
-from engine.stat_calculator import compute_effective_stats, required_stats_for_groups
+from engine.models import Character, StatusEffect, new_id
+from engine.stat_calculator import compute_effective_stats
+from .deps import storage, templates, get_groups_by_id
 
-from router.functions.groups_function import get_groups_by_id
+router = APIRouter(prefix="/characters", tags=["characters"])
 
-router = APIRouter()
-templates = Jinja2Templates(directory="web/templates")
-storage = Storage("data")
 
-@router.get("/characters")
+@router.get("")
 def characters_list(request: Request):
     chars = storage.get_characters()
     groups_by_id = get_groups_by_id()
@@ -29,20 +21,20 @@ def characters_list(request: Request):
     return templates.TemplateResponse("characters_list.html", {"request": request, "rows": rows})
 
 
-@router.get("/characters/new")
+@router.get("/new")
 def character_new_form(request: Request):
     groups = storage.get_groups()
     return templates.TemplateResponse("character_form.html", {"request": request, "character": None, "groups": groups})
 
 
-@router.get("/characters/{cid}/edit")
+@router.get("/{cid}/edit")
 def character_edit_form(request: Request, cid: str):
     character = storage.get_character(cid)
     groups = storage.get_groups()
     return templates.TemplateResponse("character_form.html", {"request": request, "character": character, "groups": groups})
 
 
-@router.post("/characters/save")
+@router.post("/save")
 async def character_save(request: Request):
     form = await request.form()
     cid = form.get("id") or None
@@ -73,7 +65,7 @@ async def character_save(request: Request):
     return RedirectResponse(f"/characters/{character.id}", status_code=303)
 
 
-@router.get("/characters/{cid}")
+@router.get("/{cid}")
 def character_detail(request: Request, cid: str):
     c = storage.get_character(cid)
     if not c:
@@ -90,7 +82,7 @@ def character_detail(request: Request, cid: str):
     })
 
 
-@router.post("/characters/{cid}/status/add")
+@router.post("/{cid}/status/add")
 async def character_status_add(cid: str, request: Request):
     form = await request.form()
     c = storage.get_character(cid)
@@ -112,7 +104,7 @@ async def character_status_add(cid: str, request: Request):
     return RedirectResponse(f"/characters/{cid}", status_code=303)
 
 
-@router.post("/characters/{cid}/status/{status_id}/remove")
+@router.post("/{cid}/status/{status_id}/remove")
 def character_status_remove(cid: str, status_id: str):
     c = storage.get_character(cid)
     if not c:
@@ -123,7 +115,7 @@ def character_status_remove(cid: str, status_id: str):
     return RedirectResponse(f"/characters/{cid}", status_code=303)
 
 
-@router.post("/characters/{cid}/delete")
+@router.post("/{cid}/delete")
 def character_delete(cid: str):
     storage.delete_character(cid)
     return RedirectResponse("/characters", status_code=303)

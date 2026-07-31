@@ -1,23 +1,15 @@
-from __future__ import annotations
+from fastapi import APIRouter, Request
 
-from fastapi import APIRouter, Depends
-from fastapi import FastAPI, Request, Form
-from fastapi.templating import Jinja2Templates
-
-from engine.models import Group, Character, StatusEffect, StatDefinition, new_id
-from engine.storage import Storage
-from engine.stat_calculator import compute_effective_stats, required_stats_for_groups
+from engine.models import Character
 from engine.mod_loader import load_mods
+from engine.stat_calculator import compute_effective_stats
 from engine.skill import execute_skill
+from .deps import storage, templates, get_groups_by_id
 
-from router.functions.groups_function import get_groups_by_id
+router = APIRouter(prefix="/combat", tags=["combat"])
 
 
-router = APIRouter()
-templates = Jinja2Templates(directory="web/templates")
-storage = Storage("data")
-
-@router.get("/combat")
+@router.get("")
 def combat_form(request: Request):
     chars = storage.get_characters()
     _, skills, _ = load_mods("mods")
@@ -26,7 +18,7 @@ def combat_form(request: Request):
     })
 
 
-@router.post("/combat/execute")
+@router.post("/execute")
 async def combat_execute(request: Request):
     form = await request.form()
     caster_id = form.get("caster_id")

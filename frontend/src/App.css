@@ -1,0 +1,9 @@
+.app-shell {
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 24px 16px;
+}
+header h1 {
+  font-size: 20px;
+  margin-bottom: 20px;
+}
