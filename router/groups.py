@@ -7,11 +7,6 @@ from .deps import storage, templates
 router = APIRouter(prefix="/groups", tags=["groups"])
 
 
-@router.get("")
-def groups_list(request: Request):
-    groups = storage.get_groups()
-    return templates.TemplateResponse("groups_list.html", {"request": request, "groups": groups})
-
 
 @router.get("/new")
 def group_new_form(request: Request):

@@ -8,17 +8,6 @@ from .deps import storage, templates, get_groups_by_id
 router = APIRouter(prefix="/characters", tags=["characters"])
 
 
-@router.get("")
-def characters_list(request: Request):
-    chars = storage.get_characters()
-    groups_by_id = get_groups_by_id()
-    rows = []
-    for c in chars:
-        char = Character(**c)
-        eff = compute_effective_stats(char, groups_by_id)
-        group_names = [groups_by_id[g].name for g in char.group_ids if g in groups_by_id]
-        rows.append({"char": char, "effective_stats": eff, "group_names": group_names})
-    return templates.TemplateResponse("characters_list.html", {"request": request, "rows": rows})
 
 
 @router.get("/new")
