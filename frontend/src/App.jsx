@@ -7,9 +7,9 @@
  * 그래서 라우터가 "지금 내가 어느 경로 밑에 붙어있는지"를 알아야 링크가 안 깨집니다.
  */
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import Nav from './Nav'
-import Dashboard from './Dashboard'
-import CharacterList from './CharacterList'
+import Nav from './components/Nav'
+import Dashboard from './pages/Dashboard'
+import CharacterList from './pages/CharacterList'
 import './App.css'
 
 const basename = import.meta.env.DEV ? '/' : '/app'

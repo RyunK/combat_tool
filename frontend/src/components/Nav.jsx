@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { backendUrl } from './backendUrl'
+import { backendUrl } from '../utils/backendUrl'
 
 function Nav() {
   return (
