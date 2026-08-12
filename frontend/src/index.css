@@ -8,10 +8,12 @@
   --surface-soft: #fcedd5;       /* ← theader / 토큰 배경. 채도 올린 웜톤 살구색 */
 
   --primary: #F0A04B;            /* 라벤더 → 테라코타 톤으로 전환 */
-  --primary-dark: #F0A04B;
+  --primary-dark: #f5963e;
   --pink: #D99A87;
   --mint: #B1C29E;               /* 민트는 웜톤과 안 어울려서 올리브골드로 대체 */
   --coral: #D97B5C;
+
+  --secondary: #FFE2AF;      /* 눌러앉은 웜 브라운 - 보조 버튼용 */
 
   --text: #F0A04B;
   --text-muted: #B1C29E;
@@ -24,6 +26,7 @@
   --shadow-soft: 0 4px 14px rgba(150, 110, 70, 0.12);
   --shadow-sticker: 2px 2px 0 rgba(150, 110, 70, 0.14);
   --shadow-card-hover: 0 6px 16px rgba(150, 110, 70, 0.18);
+  --shadow-btn-hover: 0 6px 16px rgba(114, 79, 44, 0.342);
 }
 
 * { box-sizing: border-box; }
@@ -124,7 +127,7 @@ tr:last-child td { border-bottom: none; }
 /* ---------------------------------------------------- 버튼 */
 .btn {
   display: inline-block;
-  padding: 9px 18px;
+  padding: 7px 16px;
   border-radius: var(--radius-pill);
   text-decoration: none;
   border: none;
@@ -132,13 +135,21 @@ tr:last-child td { border-bottom: none; }
   font-size: 14px;
   font-weight: 700;
   font-family: inherit;
-  background: var(--primary);
-  color: white;
   box-shadow: var(--shadow-soft);
   transition: transform .12s ease, box-shadow .12s ease;
 }
-.btn:hover { transform: translateY(-2px); box-shadow: var(--shadow-card-hover); background: var(--primary-dark); }
-.btn:active { transform: translateY(0) scale(.97); }
+.btn:hover { box-shadow: var(--shadow-btn-hover);  }
+/* .btn:active { transform: translateY(0) scale(.97); } */
+
+.btn-primary{
+  background: var(--primary);
+  color: white;
+}
+
+.btn-secondary {
+  background: var(--secondary);
+  color: var(--secondary-dark);
+}
 
 :focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
 

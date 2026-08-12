@@ -152,17 +152,17 @@ function CharacterForm() {
                 value={row.value}
                 onChange={(e) => updateStatRow(idx, 'value', e.target.value)}
               />
-              <button type="button" onClick={() => removeStatRow(idx)}>✕</button>
+              <button type="button" className="btn" onClick={() => removeStatRow(idx)}>✕</button>
             </div>
           ))}
         </div>
-        <button type="button" className="btn-secondary" onClick={addStatRow}>+ 커스텀 스탯 추가</button>
+        <button type="button" className="btn btn-secondary" onClick={addStatRow}>+ 커스텀 스탯 추가</button>
 
         <div className="form-actions">
-          <button type="submit" className="btn" disabled={saving}>
+          <button type="submit" className="btn btn-primary" disabled={saving}>
             {saving ? '저장 중...' : '저장'}
           </button>
-          <Link to="/characters" className="btn-secondary">취소</Link>
+          <Link to="/characters" className="btn btn-secondary">취소</Link>
         </div>
       </form>
     </div>
