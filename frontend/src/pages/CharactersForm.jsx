@@ -152,7 +152,7 @@ function CharacterForm() {
                 value={row.value}
                 onChange={(e) => updateStatRow(idx, 'value', e.target.value)}
               />
-              <button type="button" className="btn" onClick={() => removeStatRow(idx)}>✕</button>
+              <button type="button" className="btn btn-red" onClick={() => removeStatRow(idx)}>✕</button>
             </div>
           ))}
         </div>

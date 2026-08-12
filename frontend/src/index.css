@@ -9,7 +9,7 @@
 
   --primary: #F0A04B;            /* 라벤더 → 테라코타 톤으로 전환 */
   --primary-dark: #f5963e;
-  --pink: #D99A87;
+  --pink: #D6584F;
   --mint: #B1C29E;               /* 민트는 웜톤과 안 어울려서 올리브골드로 대체 */
   --coral: #D97B5C;
 
@@ -151,7 +151,67 @@ tr:last-child td { border-bottom: none; }
   color: var(--secondary-dark);
 }
 
+.btn-red {
+  background: var(--pink);
+  color: white;
+}
+
 :focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+
+
+/* ---------------------------------------------------- input박스 */
+input[type=text],
+input[type=number],
+select,
+textarea {
+  display: block;
+  width: 100%;
+  padding: 9px 12px;
+  font-size: 14px;
+  font-family: inherit;
+  color: var(--text);
+  background: var(--surface);
+  border: 2px solid var(--surface-soft);
+  border-radius: var(--radius-sm);
+  transition: border-color .12s ease, box-shadow .12s ease;
+}
+
+input[type=text]::placeholder,
+input[type=number]::placeholder,
+textarea::placeholder {
+  color: var(--text-muted);
+}
+
+input[type=text]:hover,
+input[type=number]:hover,
+select:hover,
+textarea:hover {
+  border-color: var(--secondary);
+}
+
+input[type=text]:focus,
+input[type=number]:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(240, 160, 75, 0.18); /* --primary 색을 옅게 깐 포커스 링 */
+}
+
+input:disabled,
+select:disabled,
+textarea:disabled {
+  background: var(--surface-soft);
+  color: var(--text-muted);
+  cursor: not-allowed;
+  border-color: var(--surface-soft);
+}
+
+textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
 
 /* ---------------------------------------------------- 상태 메시지 */
 .error {
