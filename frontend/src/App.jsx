@@ -12,6 +12,7 @@ import Dashboard from './pages/Dashboard'
 import CharacterList from './pages/CharacterList'
 import GroupList from './pages/GroupList'
 import CharactersForm from './pages/forms/CharactersForm'
+import CharactersDetail from './pages/details/CharacterDetail'
 import './App.css'
 
 const basename = import.meta.env.DEV ? '/' : '/app'
@@ -25,6 +26,9 @@ function App() {
           <Routes>
             <Route path="/" element={<Dashboard />} />
             <Route path="/characters" element={<CharacterList />} />
+            <Route path="/characters/new" element={<CharactersForm />} />
+            <Route path="/characters/:id" element={<CharactersDetail />} />
+            <Route path="/characters/:id/edit" element={<CharactersForm />} />
             <Route path="/characters/new" element={<CharactersForm />} />
             <Route path="/groups" element={<GroupList />} />
           </Routes>

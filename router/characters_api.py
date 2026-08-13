@@ -1,8 +1,9 @@
 from __future__ import annotations
 
 from fastapi import APIRouter, Request
+from pydantic import BaseModel
 
-from engine.models import Character
+from engine.models import Character, StatusEffect, new_id
 from engine.mod_loader import load_mods
 from engine.stat_calculator import compute_effective_stats
 from .deps import storage, get_groups_by_id, templates
@@ -31,4 +32,39 @@ def api_characters_list():
 def character_new_form():
     groups = storage.get_groups()
     return {"character": None, "groups": groups}
-    # return templates.TemplateResponse("character_form.html", {"request": request, "character": None, "groups": groups})
+
+class CharacterIn(BaseModel):
+    id: str | None = None   # 있으면 수정, 없으면 새로 생성
+    name: str
+    group_ids: list[str] = []
+    base_stats: dict[str, float] = {}
+
+
+@router.get("/{cid}")
+def api_character_detail(cid: str):
+    """
+    캐릭터 원본 데이터(그룹 id 목록, 기본 스탯)를 그대로 반환.
+    """
+    return storage.get_character(cid)
+
+@router.post("")
+def api_character_save(payload: CharacterIn):
+    # 상태(statuses)는 이 폼에서 안 건드리니, 기존 값을 그대로 보존한다.
+    existing = storage.get_character(payload.id) if payload.id else None
+    statuses = existing.get("statuses", []) if existing else []
+
+    character = Character(
+        id=payload.id or new_id(),
+        name=payload.name,
+        group_ids=payload.group_ids,
+        base_stats=payload.base_stats,
+        statuses=[StatusEffect(**s) for s in statuses],
+    )
+    storage.save_character(character.model_dump())
+    return character.model_dump()
+
+
+@router.delete("/{cid}")
+def api_character_delete(cid: str):
+    storage.delete_character(cid)
+    return {"ok": True}

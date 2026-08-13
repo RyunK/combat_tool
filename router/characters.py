@@ -10,10 +10,6 @@ router = APIRouter(prefix="/characters", tags=["characters"])
 
 
 
-@router.get("/new")
-def character_new_form(request: Request):
-    groups = storage.get_groups()
-    return templates.TemplateResponse("character_form.html", {"request": request, "character": None, "groups": groups})
 
 
 @router.get("/{cid}/edit")
