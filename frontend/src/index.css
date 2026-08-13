@@ -158,6 +158,11 @@ tr:last-child td { border-bottom: none; }
   color: white;
 }
 
+.btn-primary:hover{
+  background: var(--primary-dark);
+  color: white;
+}
+
 .btn-secondary {
   /* background: var(--secondary); */
   /* color: white; */
@@ -167,8 +172,8 @@ tr:last-child td { border-bottom: none; }
 }
 
 .btn-secondary:hover {
-  background: var(--primary);
-  color: white;
+  background: var(--secondary);
+  color: var(--secondary-dark);
 }
 
 .btn-red {
