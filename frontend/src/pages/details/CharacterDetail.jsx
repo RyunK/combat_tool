@@ -74,7 +74,7 @@ function CharacterDetail() {
       {statEntries.length === 0 ? (
         <p className="hint">등록된 스탯이 없습니다.</p>
       ) : (
-        <table>
+        <table className="stat-table">
           <thead>
             <tr><th>이름</th><th>값</th></tr>
           </thead>

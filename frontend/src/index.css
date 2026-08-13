@@ -112,6 +112,24 @@ th, td { padding: 12px 14px; text-align: left; font-size: 14px; border-bottom: 1
 th { color: var(--primary-dark); font-weight: 700; background: var(--surface-soft); }
 tr:last-child td { border-bottom: none; }
 
+tbody tr.row-link {
+  cursor: pointer;
+  transition: background-color .12s ease;
+}
+
+tbody tr.row-link:hover {
+  background-color: #fcedd570;
+}
+
+.stat-table{
+  max-width: 300px;
+  table-layout: fixed;
+}
+.stat-table th,
+.stat-table td {
+  text-align: center;
+}
+
 /* ---------------------------------------------------- 태그 (시그니처 요소: 스티커 뱃지) */
 .tag {
   display: inline-block;
@@ -159,7 +177,7 @@ tr:last-child td { border-bottom: none; }
 }
 
 .btn-primary:hover{
-  background: var(--primary-dark);
+  /* background: var(--primary-dark); */
   color: white;
 }
 

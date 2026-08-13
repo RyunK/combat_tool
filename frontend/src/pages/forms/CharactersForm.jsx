@@ -169,7 +169,7 @@ function CharacterForm() {
           <button type="submit" className="btn btn-primary" disabled={saving}>
             {saving ? '저장 중...' : '저장'}
           </button>
-          <Link to="/characters" className="btn btn-secondary">취소</Link>
+          <Link to={isEdit ? `/characters/${cid}` : '/characters'} className="btn btn-secondary">취소</Link>
         </div>
       </form>
     </div>

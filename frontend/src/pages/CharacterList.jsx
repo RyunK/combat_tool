@@ -23,7 +23,7 @@
  *    proxy 설정 덕분에 자동으로 127.0.0.1:8000 (FastAPI)으로 연결됩니다.
  */
 import { useState, useEffect } from 'react'
-import { Link } from "react-router-dom";
+import { Link, useNavigate  } from "react-router-dom";
 
 function CharacterList() {
   // 서버에서 받아온 캐릭터 목록을 담아둘 state
@@ -32,6 +32,7 @@ function CharacterList() {
   const [loading, setLoading] = useState(true)
   // fetch가 실패했을 때 에러 메시지를 담아둘 state
   const [error, setError] = useState(null)
+  const navigate = useNavigate()
 
   // [] 를 두 번째 인자로 주면 "컴포넌트가 처음 화면에 나타났을 때 딱 한 번만" 실행됩니다.
   useEffect(() => {
@@ -80,7 +81,9 @@ function CharacterList() {
           {/* 배열을 화면에 뿌릴 땐 .map() 을 씁니다.
               각 항목마다 고유한 key 를 꼭 지정해야 리액트가 어떤 게 바뀌었는지 압니다. */}
           {characters.map((c) => (
-            <tr key={c.id}>
+            <tr key={c.id} 
+              className="row-link"
+              onClick={() => navigate(`/characters/${c.id}`)}>
               <td><strong>{c.name}</strong></td>
               <td>
                 {c.group_names.map((g) => (
