@@ -11,7 +11,7 @@ import Nav from './components/Nav'
 import Dashboard from './pages/Dashboard'
 import CharacterList from './pages/CharacterList'
 import GroupList from './pages/GroupList'
-import CharactersForm from './pages/CharactersForm'
+import CharactersForm from './pages/forms/CharactersForm'
 import './App.css'
 
 const basename = import.meta.env.DEV ? '/' : '/app'

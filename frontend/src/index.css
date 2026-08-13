@@ -7,15 +7,16 @@
 
   --surface-soft: #fcedd5;       /* ← theader / 토큰 배경. 채도 올린 웜톤 살구색 */
 
-  --primary: #F0A04B;            /* 라벤더 → 테라코타 톤으로 전환 */
-  --primary-dark: #f5963e;
+  --primary: #ffab76;            /* 라벤더 → 테라코타 톤으로 전환 */
+  --primary-dark: #e68052;
   --pink: #D6584F;
   --mint: #B1C29E;               /* 민트는 웜톤과 안 어울려서 올리브골드로 대체 */
   --coral: #D97B5C;
 
-  --secondary: #FFE2AF;      /* 눌러앉은 웜 브라운 - 보조 버튼용 */
+  --secondary: #ffefd5;      /* 눌러앉은 웜 브라운 - 보조 버튼용 */
+  --secondary-dark: #ffab76;  /* secondary 대비용 텍스트 컬러 */
 
-  --text: #F0A04B;
+  --text: #e68052;
   --text-muted: #B1C29E;
   --border: #D7FFF1;
 
@@ -42,9 +43,14 @@ h1, h2, h3 {
   font-family: "Jua", "Noto Sans KR", sans-serif;
   font-weight: 400;
   color: var(--text);
+  margin-bottom: 6px;
 }
+
+h1, h2 {margin-bottom: 12px;}
 h2 { font-size: 22px; margin-top: 8px; }
 h3 { font-size: 17px; color: var(--primary-dark); }
+
+p { margin: 0; line-height: 1.6; }
 
 /* ---------------------------------------------------- 헤더 / 네비 */
 header {
@@ -125,6 +131,12 @@ tr:last-child td { border-bottom: none; }
 .tag.status { background: #FBE4DC; color: #B85C4A; border-color: var(--pink); }
 
 /* ---------------------------------------------------- 버튼 */
+.btn-row{
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
 .btn {
   display: inline-block;
   padding: 7px 16px;
@@ -147,8 +159,16 @@ tr:last-child td { border-bottom: none; }
 }
 
 .btn-secondary {
-  background: var(--secondary);
-  color: var(--secondary-dark);
+  /* background: var(--secondary); */
+  /* color: white; */
+  background: var(--bg);
+  color: var(--primary);
+  border: 1px solid var(--primary);
+}
+
+.btn-secondary:hover {
+  background: var(--primary);
+  color: white;
 }
 
 .btn-red {
@@ -158,6 +178,25 @@ tr:last-child td { border-bottom: none; }
 
 :focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
 
+/* ---------------------------------------------------- 폼*/
+
+
+.form-default-row{
+  width: 100%;
+  max-width: 300px;
+  display: flex;
+  gap: 5px;
+  margin-bottom: 13px;
+}
+
+.form-stat-row{
+  display: grid;
+  grid-template-columns: 200px 200px auto; 
+  justify-content: start; 
+  gap: 4px;
+
+  margin-bottom: 7px;
+}
 
 /* ---------------------------------------------------- input박스 */
 input[type=text],
@@ -211,6 +250,8 @@ textarea {
   resize: vertical;
   min-height: 80px;
 }
+
+
 
 
 /* ---------------------------------------------------- 상태 메시지 */

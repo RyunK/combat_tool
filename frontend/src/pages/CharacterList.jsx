@@ -23,6 +23,7 @@
  *    proxy 설정 덕분에 자동으로 127.0.0.1:8000 (FastAPI)으로 연결됩니다.
  */
 import { useState, useEffect } from 'react'
+import { Link } from "react-router-dom";
 
 function CharacterList() {
   // 서버에서 받아온 캐릭터 목록을 담아둘 state
@@ -59,10 +60,12 @@ function CharacterList() {
 
   return (
     <div>
-      <h2>캐릭터 (React 버전)</h2>
+      <h2>캐릭터 (React 버전) </h2>
       <p className="hint">
         이 페이지는 FastAPI의 <code>/api/characters</code> 를 fetch로 호출해서 그립니다.
       </p>
+      <Link to="/characters/new" className="btn btn-primary">새 캐릭터 추가</Link>
+      
 
       <table>
         <thead>

@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
+import './CharactersForm.css'
 
 const emptyStatRow = () => ({ name: '', value: '' })
 
@@ -117,8 +118,12 @@ function CharacterForm() {
       {error && <div className="error">{error}</div>}
 
       <form onSubmit={handleSubmit}>
-        <label>캐릭터 이름</label>
-        <input type="text" value={name} onChange={(e) => setName(e.target.value)} required />
+        <h3>캐릭터 이름</h3>
+        <div className="form-default-row">
+          <input type="text" value={name} onChange={(e) => setName(e.target.value)} required />
+        </div>
+        {/* <label>캐릭터 이름</label>
+        <input type="text" value={name} onChange={(e) => setName(e.target.value)} required /> */}
 
         <h3>소속 그룹</h3>
         <p className="hint">
@@ -141,7 +146,7 @@ function CharacterForm() {
         <h3>스탯</h3>
         <div>
           {statRows.map((row, idx) => (
-            <div className="dyn-row" key={idx}>
+            <div className="form-stat-row" key={idx}>
               <input
                 type="text" placeholder="스탯 이름"
                 value={row.name}
@@ -156,9 +161,11 @@ function CharacterForm() {
             </div>
           ))}
         </div>
-        <button type="button" className="btn btn-secondary" onClick={addStatRow}>+ 커스텀 스탯 추가</button>
+        <div className="form-default-row">
+          <button type="button" className="btn btn-secondary" onClick={addStatRow}>+ 스탯 추가</button>
+        </div>
 
-        <div className="form-actions">
+        <div className="form-actions form-default-row">
           <button type="submit" className="btn btn-primary" disabled={saving}>
             {saving ? '저장 중...' : '저장'}
           </button>
