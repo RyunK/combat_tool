@@ -38,6 +38,7 @@ class CharacterIn(BaseModel):
     name: str
     group_ids: list[str] = []
     base_stats: dict[str, float] = {}
+    statuses: list[StatusEffect] = []
 
 
 @router.get("/{cid}")
@@ -53,12 +54,15 @@ def api_character_save(payload: CharacterIn):
     existing = storage.get_character(payload.id) if payload.id else None
     statuses = existing.get("statuses", []) if existing else []
 
+    # print(statuses)
+    print(payload.statuses)
+
     character = Character(
         id=payload.id or new_id(),
         name=payload.name,
         group_ids=payload.group_ids,
         base_stats=payload.base_stats,
-        statuses=[StatusEffect(**s) for s in statuses],
+        statuses=payload.statuses,
     )
     storage.save_character(character.model_dump())
     return character.model_dump()
