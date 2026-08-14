@@ -61,9 +61,9 @@ function CharacterList() {
 
   return (
     <div>
-      <h2>캐릭터 (React 버전) </h2>
+      <h2>캐릭터</h2>
       <p className="hint">
-        이 페이지는 FastAPI의 <code>/api/characters</code> 를 fetch로 호출해서 그립니다.
+        캐릭터를 추가하고 관리할 수 있습니다.
       </p>
       <Link to="/characters/new" className="btn btn-primary">새 캐릭터 추가</Link>
       

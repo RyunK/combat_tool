@@ -30,7 +30,7 @@ class StatusEffect(BaseModel):
     id: str = Field(default_factory=new_id)
     name: str
     target: str                     # 영향을 주는 스탯 이름 (예: "STR", "ATK", "roll")
-    mode: Literal["flat", "percent"] = "flat"
+    mode: Literal["flat", "percent", "random"] = "flat"
     value: float = 0
     duration: Optional[int] = None  # None = 무한 지속, 숫자면 남은 턴 수
     source: Optional[str] = None    # 이 상태를 건 주체 (스킬명, 캐릭터명 등)

@@ -4,6 +4,30 @@ import './CharactersForm.css'
 
 const emptyStatRow = () => ({ name: '', value: '' })
 
+const emptyStatusRow = () => ({
+  name: '',
+  target: '',      // 대상
+  value: '',       // 값
+  mode: 'random',  // 'fixed' | 'percent' | 'random' (기본값: 랜덤)
+  duration: '',    // 지속시간 (빈 값 = 무한)
+  source: '',      // 상태를 건 주체 (없어도 됨)
+  memo: '',        // 메모 (없어도 됨)
+})
+
+const STATUS_MODE_OPTIONS = [
+  { value: 'fixed', label: '고정값' },
+  { value: 'percent', label: '퍼센트' },
+]
+
+// 이름을 추후 드롭박스로 전환할 때를 대비한 프리셋 테이블.
+// key: 상태 이름, value: emptyStatusRow()의 일부 필드를 덮어쓸 기본값.
+// 드롭박스에서 이 목록에 있는 이름을 "선택"하면 옆 필드들이 자동으로 채워지고,
+// 목록에 없는 이름을 직접 "입력"하면 기본값 없이 빈 칸으로 남는다.
+// 지금은 텍스트 입력이라 항상 직접 입력 취급되므로 비어 있어도 동작에는 문제없음.
+const STATUS_NAME_PRESETS = {
+  // 예시: '기절': { target: '적 전체', mode: 'fixed', duration: '1' },
+}
+
 function CharacterForm() {
   const { id: cid } = useParams()
   const navigate = useNavigate()
@@ -13,6 +37,7 @@ function CharacterForm() {
   const [name, setName] = useState('')
   const [selectedGroupIds, setSelectedGroupIds] = useState([])
   const [statRows, setStatRows] = useState([])
+  const [statusRows, setStatusRows] = useState([])
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState(null)
@@ -39,6 +64,17 @@ function CharacterForm() {
         setSelectedGroupIds(c.group_ids || [])
         setStatRows(
           Object.entries(c.base_stats || {}).map(([k, v]) => ({ name: k, value: v }))
+        )
+        setStatusRows(
+          (c.statuses || []).map((s) => ({
+            name: s.name || '',
+            target: s.target || '',
+            value: s.value || '',
+            mode: s.mode || 'random',
+            duration: s.duration === null || s.duration === undefined ? '' : s.duration,
+            source: s.source || '',
+            memo: s.memo || '',
+          }))
         )
         setLoading(false)
       })
@@ -78,6 +114,31 @@ function CharacterForm() {
     setStatRows((rows) => rows.filter((_, i) => i !== idx))
   }
 
+  function updateStatusRow(idx, field, value) {
+    setStatusRows((rows) => rows.map((r, i) => (i === idx ? { ...r, [field]: value } : r)))
+  }
+
+  // 이름 변경 전용 핸들러.
+  // selectedFromPreset=true로 호출되면(추후 드롭박스 선택 시) STATUS_NAME_PRESETS의
+  // 기본값으로 나머지 필드를 채운다. 지금처럼 직접 타이핑할 때는 이름만 바뀌고
+  // 나머지 필드는 사용자가 입력한 값 그대로 둔다.
+  function handleStatusNameChange(idx, value, selectedFromPreset = false) {
+    setStatusRows((rows) => rows.map((r, i) => {
+      if (i !== idx) return r
+      if (selectedFromPreset && STATUS_NAME_PRESETS[value]) {
+        return { ...emptyStatusRow(), ...STATUS_NAME_PRESETS[value], name: value }
+      }
+      return { ...r, name: value }
+    }))
+  }
+
+  function addStatusRow() {
+    setStatusRows((rows) => [...rows, emptyStatusRow()])
+  }
+  function removeStatusRow(idx) {
+    setStatusRows((rows) => rows.filter((_, i) => i !== idx))
+  }
+
   async function handleSubmit(e) {
     e.preventDefault()
     setSaving(true)
@@ -88,11 +149,24 @@ function CharacterForm() {
       if (r.name.trim()) base_stats[r.name] = Number(r.value) || 0
     })
 
+    const statuses = statusRows
+      .filter((r) => r.name.trim())
+      .map((r) => ({
+        name: r.name,
+        target: r.target,
+        value: r.value,
+        mode: r.mode,
+        duration: r.duration === '' ? null : Number(r.duration),
+        source: r.source,
+        memo: r.memo,
+      }))
+
     const payload = {
       id: isEdit ? cid : null,
       name,
       group_ids: selectedGroupIds,
       base_stats,
+      statuses,
     }
 
     try {
@@ -122,8 +196,6 @@ function CharacterForm() {
         <div className="form-default-row">
           <input type="text" value={name} onChange={(e) => setName(e.target.value)} required />
         </div>
-        {/* <label>캐릭터 이름</label>
-        <input type="text" value={name} onChange={(e) => setName(e.target.value)} required /> */}
 
         <h3>소속 그룹</h3>
         <p className="hint">
@@ -148,7 +220,7 @@ function CharacterForm() {
           {statRows.map((row, idx) => (
             <div className="form-stat-row" key={idx}>
               <input
-                type="text" placeholder="스탯 이름"
+                type="text" placeholder="상태"
                 value={row.name}
                 onChange={(e) => updateStatRow(idx, 'name', e.target.value)}
               />
@@ -163,6 +235,87 @@ function CharacterForm() {
         </div>
         <div className="form-default-row">
           <button type="button" className="btn btn-secondary" onClick={addStatRow}>+ 스탯 추가</button>
+        </div>
+
+        <h3>상태</h3>
+        <div>
+          {statusRows.map((row, idx) => (
+            <div className="status-entry" key={idx}>
+              <div className="status-entry-header">
+                {/* <span className="status-entry-title">상태 {idx + 1}</span> */}
+              </div>
+              <div className="status-entry-grid">
+                <label className="status-field">
+                  상태명 *
+                  <input
+                    type="text" placeholder="상태 이름"
+                    value={row.name}
+                    onChange={(e) => handleStatusNameChange(idx, e.target.value)}
+                    required
+                  />
+                </label>
+                <label className="status-field">
+                  대상 스탯 *
+                  <input
+                    type="text" placeholder="효과를 받는 스탯"
+                    value={row.target}
+                    onChange={(e) => updateStatusRow(idx, 'target', e.target.value)}
+                    required
+                  />
+                </label>
+                <label className="status-field">
+                  값 *
+                  <input
+                    type="number" step="any" placeholder=""
+                    value={row.value}
+                    onChange={(e) => updateStatusRow(idx, 'value', e.target.value)}
+                    required
+                  />
+                </label>
+                <label className="status-field">
+                  값 적용 방식
+                  <select
+                    value={row.mode}
+                    onChange={(e) => updateStatusRow(idx, 'mode', e.target.value)}
+                  >
+                    {STATUS_MODE_OPTIONS.map((opt) => (
+                      <option key={opt.value} value={opt.value}>{opt.label}</option>
+                    ))}
+                  </select>
+                </label>
+                <label className="status-field">
+                  지속시간
+                  <input
+                    type="number" step="any" placeholder="기본 무한"
+                    value={row.duration}
+                    onChange={(e) => updateStatusRow(idx, 'duration', e.target.value)}
+                  />
+                </label>
+                <label className="status-field">
+                  상태를 건 주체
+                  <input
+                    type="text" placeholder="스킬명, 캐릭터명 등"
+                    value={row.source}
+                    onChange={(e) => updateStatusRow(idx, 'source', e.target.value)}
+                  />
+                </label>
+                <label className="status-field">
+                  메모
+                  <input
+                    type="text" 
+                    value={row.memo}
+                    onChange={(e) => updateStatusRow(idx, 'memo', e.target.value)}
+                  />
+                </label>
+              </div>
+              <div className="status-entry-footer">
+                <button type="button" className="btn btn-red" onClick={() => removeStatusRow(idx)}>삭제</button>
+              </div>
+            </div>
+          ))}
+        </div>
+        <div className="form-default-row">
+          <button type="button" className="btn btn-secondary" onClick={addStatusRow}>+ 상태 추가</button>
         </div>
 
         <div className="form-actions form-default-row">
