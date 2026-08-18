@@ -105,7 +105,7 @@ export default function GroupForm() {
 
     try {
       const res = await fetch(isEdit ? `/api/groups/${gid}` : "/api/groups", {
-        method: isEdit ? "PUT" : "POST",
+        method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
