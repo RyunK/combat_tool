@@ -1,25 +1,38 @@
-from fastapi import APIRouter, Request
+from __future__ import annotations
+from fastapi import APIRouter, Depends
+
+from fastapi import FastAPI, Request, Form
 from fastapi.responses import RedirectResponse
+from fastapi.staticfiles import StaticFiles
+from fastapi.templating import Jinja2Templates
 
-from engine.models import Group, StatDefinition, StatusEffect, new_id
-from .deps import storage, templates
-
-router = APIRouter(prefix="/groups", tags=["groups"])
+from engine.models import Group, Character, StatusEffect, StatDefinition, new_id
+from engine.storage import Storage
 
 
+templates = Jinja2Templates(directory="web/templates")
 
-@router.get("/new")
+storage = Storage("data")
+router = APIRouter()
+
+@router.get("/formulas")
+def formulas_list(request: Request):
+    formulas = storage.get_formulas()
+    return templates.TemplateResponse("formulas_list.html", {"request": request, "formulas": formulas})
+
+
+@router.get("/formulas/new")
 def group_new_form(request: Request):
-    return templates.TemplateResponse("group_form.html", {"request": request, "group": None})
+    return templates.TemplateResponse("formula_form.html", {"request": request, "group": None})
 
 
-@router.get("/{gid}/edit")
+@router.get("/formulas/{gid}/edit")
 def group_edit_form(request: Request, gid: str):
     group = storage.get_group(gid)
-    return templates.TemplateResponse("group_form.html", {"request": request, "group": group})
+    return templates.TemplateResponse("formula_form.html", {"request": request, "group": group})
 
 
-@router.post("/save")
+@router.post("/groups/save")
 async def group_save(request: Request):
     form = await request.form()
     gid = form.get("id") or None
@@ -55,10 +68,10 @@ async def group_save(request: Request):
         statuses=statuses,
     )
     storage.save_group(group.model_dump())
-    return RedirectResponse("/groups", status_code=303)
+    return RedirectResponse("/formulas", status_code=303)
 
 
-@router.post("/{gid}/delete")
+@router.post("/formulas/{gid}/delete")
 def group_delete(gid: str):
     storage.delete_group(gid)
-    return RedirectResponse("/groups", status_code=303)
+    return RedirectResponse("/formulas", status_code=303)

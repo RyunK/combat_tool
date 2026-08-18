@@ -3,55 +3,35 @@
 
 실행: python main.py  (또는 run.bat / run.sh 더블클릭)
 브라우저에서 http://127.0.0.1:8000 자동으로 열립니다.
+
+라우터는 routers/ 패키지에 기능별로 분리되어 있습니다.
+- routers/index.py       대시보드
+- routers/groups.py      그룹 CRUD
+- routers/characters.py  캐릭터 CRUD, 상태 추가/제거
+- routers/combat.py      전투 계산
+- routers/deps.py        공용 storage/templates
 """
 from __future__ import annotations
 
 import threading
 import webbrowser
 
-from fastapi import FastAPI, Request, Form
-from fastapi.responses import RedirectResponse
+from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
-from fastapi.templating import Jinja2Templates
 import uvicorn
 
-from engine.models import Group, Character, StatusEffect, StatDefinition, new_id
-from engine.storage import Storage
-from engine.stat_calculator import compute_effective_stats, required_stats_for_groups
-from engine.mod_loader import load_mods
-from engine.skill import execute_skill
-
-from router import  groups, characters, combat
+from router import index, groups, characters, combat, api, characters_api, groups_api
 
 app = FastAPI(title="전투 GM 계산기")
 app.mount("/static", StaticFiles(directory="web/static"), name="static")
-templates = Jinja2Templates(directory="web/templates")
 
-storage = Storage("data")
-
-
-# def get_groups_by_id() -> dict[str, Group]:
-#     return {g["id"]: Group(**g) for g in storage.get_groups()}
-
-
-# ---------------------------------------------------------------- 대시보드
-@app.get("/")
-def index(request: Request):
-    formulas, skills, manifests = load_mods("mods")
-    return templates.TemplateResponse("index.html", {
-        "request": request,
-        "group_count": len(storage.get_groups()),
-        "char_count": len(storage.get_characters()),
-        "formula_count": len(formulas),
-        "skill_count": len(skills),
-        "manifests": manifests,
-    })
-
-app.include_router(groups.router) # 그룹
-app.include_router(characters.router) # 캐릭터
-app.include_router(combat.router) # 전투 계산
-
-
+app.include_router(index.router)
+app.include_router(groups.router)
+app.include_router(characters.router)
+app.include_router(combat.router)
+app.include_router(api.router)
+app.include_router(characters_api.router)
+app.include_router(groups_api.router)
 
 
 def _open_browser():
