@@ -1,15 +1,37 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import './StatusFormCard.css'
 
 const emptyStat = () => ({ name: "", default: "" });
+
+// CharactersForm.js와 동일한 상태 필드 구성
 const emptyStatus = () => ({
   name: "",
-  target: "",
-  mode: "flat",
-  value: "",
-  duration: "",
-  source: "",
+  target: "",      // 대상
+  value: "",        // 값
+  mode: "fixed",     // 'fixed' | 'percent'
+  duration: "",      // 지속시간 (빈 값 = 무한)
+  timing: "one_time",// 적용 시점
+  source: "",        // 상태를 건 주체 (없어도 됨)
+  memo: "",          // 메모 (없어도 됨)
 });
+
+const STATUS_MODE_OPTIONS = [
+  { value: 'fixed', label: '고정값' },
+  { value: 'percent', label: '퍼센트' },
+]
+
+const STATUS_TIMING_OPTIONS = [
+  { value: 'one_time', label: '한 번만' },
+  { value: 'turn_start', label: '매 턴 시작시' },
+  { value: 'turn_end', label: '매 턴 종료시' },
+  { value: 'hp_calc', label: '체력 계산시마다' },
+]
+
+// CharactersForm.js와 동일: 이름 프리셋 (드롭박스 전환 대비)
+const STATUS_NAME_PRESETS = {
+  // 예시: '기절': { target: '적 전체', mode: 'fixed', duration: '1' },
+}
 
 export default function GroupForm() {
   const { gid } = useParams(); // /groups/:gid/edit 라우트에서 사용, 새 그룹이면 undefined
@@ -43,12 +65,14 @@ export default function GroupForm() {
         setStatuses(
           group.statuses?.length
             ? group.statuses.map((s) => ({
-                name: s.name,
-                target: s.target,
-                mode: s.mode,
-                value: s.value,
-                duration: s.duration ?? "",
-                source: s.source ?? "",
+                name: s.name || '',
+                target: s.target || '',
+                value: s.value || '',
+                mode: s.mode || 'fixed',
+                timing: s.timing || 'one_time',
+                duration: s.duration === null || s.duration === undefined ? '' : s.duration,
+                source: s.source || '',
+                memo: s.memo || '',
               }))
             : [emptyStatus()]
         );
@@ -73,6 +97,18 @@ export default function GroupForm() {
       rows.map((row, i) => (i === idx ? { ...row, [field]: value } : row))
     );
   };
+
+  // CharactersForm.js와 동일: 이름 변경 전용 핸들러 (프리셋 대비)
+  function handleStatusNameChange(idx, value, selectedFromPreset = false) {
+    setStatuses((rows) => rows.map((r, i) => {
+      if (i !== idx) return r
+      if (selectedFromPreset && STATUS_NAME_PRESETS[value]) {
+        return { ...emptyStatus(), ...STATUS_NAME_PRESETS[value], name: value }
+      }
+      return { ...r, name: value }
+    }))
+  }
+
   const addStatusRow = () => setStatuses((rows) => [...rows, emptyStatus()]);
   const removeStatusRow = (idx) =>
     setStatuses((rows) => rows.filter((_, i) => i !== idx));
@@ -96,10 +132,12 @@ export default function GroupForm() {
         .map((s) => ({
           name: s.name,
           target: s.target,
+          value: s.value,
           mode: s.mode,
-          value: Number(s.value) || 0,
           duration: s.duration === "" ? null : Number(s.duration),
+          timing: s.timing,
           source: s.source || null,
+          memo: s.memo || null,
         })),
     };
 
@@ -155,7 +193,7 @@ export default function GroupForm() {
         {statSchema.map((row, idx) => (
           <div
             key={idx}
-            style={{ display: "flex", gap: 8, marginBottom: 8, alignItems: "center" }}
+            className="form-stat-row"
           >
             <input
               type="text"
@@ -185,72 +223,100 @@ export default function GroupForm() {
           </button>
         </div>
 
+        {/* ---------------------------------------------------- 그룹 전체 상태 (CharactersForm과 동일한 구조) */}
         <h3>그룹 전체 상태</h3>
         <p className="hint">
           이 그룹 소속 캐릭터 전원에게 자동으로 적용되는 상태입니다. 예: 탱커는 HP +20%
         </p>
-        {statuses.map((row, idx) => (
-          <div
-            key={idx}
-            style={{
-              display: "flex",
-              gap: 8,
-              marginBottom: 8,
-              alignItems: "center",
-              flexWrap: "wrap",
-            }}
-          >
-            <input
-              type="text"
-              placeholder="상태 이름 (예: 탱커 체력보정)"
-              value={row.name}
-              onChange={(e) => updateStatus(idx, "name", e.target.value)}
-            />
-            <input
-              type="text"
-              placeholder="대상 스탯 (예: HP)"
-              value={row.target}
-              onChange={(e) => updateStatus(idx, "target", e.target.value)}
-            />
-            <select
-              value={row.mode}
-              onChange={(e) => updateStatus(idx, "mode", e.target.value)}
-            >
-              <option value="flat">flat(고정값)</option>
-              <option value="percent">percent(%)</option>
-            </select>
-            <input
-              type="number"
-              step="any"
-              placeholder="값"
-              value={row.value}
-              onChange={(e) => updateStatus(idx, "value", e.target.value)}
-            />
-            <input
-              type="number"
-              placeholder="지속턴(비우면 무한)"
-              value={row.duration}
-              onChange={(e) => updateStatus(idx, "duration", e.target.value)}
-            />
-            <input
-              type="text"
-              placeholder="출처(선택)"
-              value={row.source}
-              onChange={(e) => updateStatus(idx, "source", e.target.value)}
-            />
-            <button
-              type="button"
-              className="btn btn-red"
-              onClick={() => removeStatusRow(idx)}
-            >
-              ✕
-            </button>
-          </div>
-        ))}
-        <div className="btn-row" style={{ marginBottom: 20 }}>
-          <button type="button" className="btn btn-secondary" onClick={addStatusRow}>
-            + 그룹 상태 추가
-          </button>
+        <div>
+          {statuses.map((row, idx) => (
+            <div className="status-entry" key={idx}>
+              <div className="status-entry-header">
+                {/* <span className="status-entry-title">상태 {idx + 1}</span> */}
+              </div>
+              <div className="status-entry-grid">
+                <label className="status-field">
+                  상태명 *
+                  <input
+                    type="text" placeholder="상태 이름"
+                    value={row.name}
+                    onChange={(e) => handleStatusNameChange(idx, e.target.value)}
+                    required
+                  />
+                </label>
+                <label className="status-field">
+                  대상 스탯 *
+                  <input
+                    type="text" placeholder="효과를 받는 스탯"
+                    value={row.target}
+                    onChange={(e) => updateStatus(idx, 'target', e.target.value)}
+                    required
+                  />
+                </label>
+                <label className="status-field">
+                  값 *
+                  <input
+                    type="number" step="any" placeholder=""
+                    value={row.value}
+                    onChange={(e) => updateStatus(idx, 'value', e.target.value)}
+                    required
+                  />
+                </label>
+                <label className="status-field">
+                  값 적용 방식
+                  <select
+                    value={row.mode}
+                    onChange={(e) => updateStatus(idx, 'mode', e.target.value)}
+                  >
+                    {STATUS_MODE_OPTIONS.map((opt) => (
+                      <option key={opt.value} value={opt.value}>{opt.label}</option>
+                    ))}
+                  </select>
+                </label>
+                <label className="status-field">
+                  지속시간
+                  <input
+                    type="number" step="any" placeholder="기본 무한"
+                    value={row.duration}
+                    onChange={(e) => updateStatus(idx, 'duration', e.target.value)}
+                  />
+                </label>
+                <label className="status-field">
+                  적용 시점
+                  <select
+                    value={row.timing}
+                    onChange={(e) => updateStatus(idx, 'timing', e.target.value)}
+                  >
+                    {STATUS_TIMING_OPTIONS.map((opt) => (
+                      <option key={opt.value} value={opt.value}>{opt.label}</option>
+                    ))}
+                  </select>
+                </label>
+                <label className="status-field">
+                  상태를 건 주체
+                  <input
+                    type="text" placeholder="스킬명, 캐릭터명 등"
+                    value={row.source}
+                    onChange={(e) => updateStatus(idx, 'source', e.target.value)}
+                  />
+                </label>
+                <label className="status-field">
+                  메모
+                  <input
+                    type="text"
+                    value={row.memo}
+                    onChange={(e) => updateStatus(idx, 'memo', e.target.value)}
+                  />
+                </label>
+              </div>
+              <div className="status-entry-footer">
+                <button type="button" className="btn btn-red" onClick={() => removeStatusRow(idx)}>삭제</button>
+              </div>
+            </div>
+          ))}
+        </div>
+        <div className="form-default-row">
+          <button type="button" className="btn btn-secondary" onClick={addStatusRow}>+ 그룹 상태 추가</button>
         </div>
 
         <div className="btn-row">

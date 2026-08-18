@@ -41,9 +41,9 @@ function GroupList() {
 
   return (
     <div>
-      <h2>그룹 (React 버전)</h2>
+      <h2>그룹</h2>
       <p className="hint">
-        그룹은 진영(플레이어팀/몬스터팀)일 수도 있고, 역할(탱커/힐러/딜러)일 수도 있습니다. 캐릭터는 여러 그룹에 동시에 속할 수 있습니다.
+        그룹은 진영(플레이어/에너미)이나 포지션(탱커/힐러/딜러) 등으로 설정할 수 있습니다. 캐릭터는 여러 그룹에 동시에 속할 수 있습니다.
       </p>
 
       <Link to="/groups/new" className="btn btn-primary">새 그룹 추가</Link>
@@ -61,7 +61,9 @@ function GroupList() {
           {/* 배열을 화면에 뿌릴 땐 .map() 을 씁니다.
               각 항목마다 고유한 key 를 꼭 지정해야 리액트가 어떤 게 바뀌었는지 압니다. */}
           {groups.map((g) => (
-            <tr key={g.id}>
+            <tr key={g.id}
+            className="row-link"
+            onClick={() => navigate(`/groups/${g.id}`)}>
               <td><strong>{g.name}</strong></td>
               <td>
                 {g.category
