@@ -2,9 +2,11 @@
  * 그룹 리스트 표시하는 파일
  */
 import { useState, useEffect } from 'react'
+import { Link, useNavigate  } from "react-router-dom";
 
 
 function GroupList() {
+  const navigate = useNavigate()
   // 서버에서 받아온 캐릭터 목록을 담아둘 state
   const [groups, setGroups] = useState([])
   // 아직 fetch 중인지 여부 (로딩 표시용)
@@ -43,6 +45,8 @@ function GroupList() {
       <p className="hint">
         그룹은 진영(플레이어팀/몬스터팀)일 수도 있고, 역할(탱커/힐러/딜러)일 수도 있습니다. 캐릭터는 여러 그룹에 동시에 속할 수 있습니다.
       </p>
+
+      <Link to="/groups/new" className="btn btn-primary">새 그룹 추가</Link>
 
       <table>
         <thead>

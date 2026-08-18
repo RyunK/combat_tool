@@ -29,7 +29,8 @@ function App() {
             <Route path="/characters/new" element={<CharactersForm />} />
             <Route path="/characters/:id" element={<CharactersDetail />} />
             <Route path="/characters/:id/edit" element={<CharactersForm />} />
-            <Route path="/characters/new" element={<CharactersForm />} />
+
+
             <Route path="/groups" element={<GroupList />} />
           </Routes>
         </main>
