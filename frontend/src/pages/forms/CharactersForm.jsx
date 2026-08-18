@@ -8,8 +8,9 @@ const emptyStatusRow = () => ({
   name: '',
   target: '',      // 대상
   value: '',       // 값
-  mode: 'random',  // 'fixed' | 'percent' | 'random' (기본값: 랜덤)
+  mode: 'fixed',  // 'fixed' | 'percent' 
   duration: '',    // 지속시간 (빈 값 = 무한)
+  timing: 'one_time',    // 지속시간 (빈 값 = 무한)
   source: '',      // 상태를 건 주체 (없어도 됨)
   memo: '',        // 메모 (없어도 됨)
 })
@@ -17,6 +18,13 @@ const emptyStatusRow = () => ({
 const STATUS_MODE_OPTIONS = [
   { value: 'fixed', label: '고정값' },
   { value: 'percent', label: '퍼센트' },
+]
+
+const STATUS_TIMING_OPTIONS = [
+  { value: 'one_time', label: '한 번만' },
+  { value: 'turn_start', label: '매 턴 시작시' },
+  { value: 'turn_end', label: '매 턴 종료시' },
+  { value: 'hp_calc', label: '체력 계산시마다' },
 ]
 
 // 이름을 추후 드롭박스로 전환할 때를 대비한 프리셋 테이블.
@@ -70,7 +78,8 @@ function CharacterForm() {
             name: s.name || '',
             target: s.target || '',
             value: s.value || '',
-            mode: s.mode || 'random',
+            mode: s.mode || 'fixed',
+            timing: s.timing || 'one_time',
             duration: s.duration === null || s.duration === undefined ? '' : s.duration,
             source: s.source || '',
             memo: s.memo || '',
@@ -157,6 +166,7 @@ function CharacterForm() {
         value: r.value,
         mode: r.mode,
         duration: r.duration === '' ? null : Number(r.duration),
+        timing: r.timing,
         source: r.source,
         memo: r.memo,
       }))
@@ -220,7 +230,7 @@ function CharacterForm() {
           {statRows.map((row, idx) => (
             <div className="form-stat-row" key={idx}>
               <input
-                type="text" placeholder="상태"
+                type="text" placeholder="스탯명"
                 value={row.name}
                 onChange={(e) => updateStatRow(idx, 'name', e.target.value)}
               />
@@ -290,6 +300,17 @@ function CharacterForm() {
                     value={row.duration}
                     onChange={(e) => updateStatusRow(idx, 'duration', e.target.value)}
                   />
+                </label>
+                <label className="status-field">
+                  적용 시점
+                  <select
+                    value={row.timing}
+                    onChange={(e) => updateStatusRow(idx, 'timing', e.target.value)}
+                  >
+                    {STATUS_TIMING_OPTIONS.map((opt) => (
+                      <option key={opt.value} value={opt.value}>{opt.label}</option>
+                    ))}
+                  </select>
                 </label>
                 <label className="status-field">
                   상태를 건 주체

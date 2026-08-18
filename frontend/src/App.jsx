@@ -10,9 +10,12 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import Nav from './components/Nav'
 import Dashboard from './pages/Dashboard'
 import CharacterList from './pages/CharacterList'
-import GroupList from './pages/GroupList'
 import CharactersForm from './pages/forms/CharactersForm'
 import CharactersDetail from './pages/details/CharacterDetail'
+
+import GroupList from './pages/GroupList'
+import GroupsForm from './pages/forms/GroupsForm'
+
 import './App.css'
 
 const basename = import.meta.env.DEV ? '/' : '/app'
@@ -32,6 +35,9 @@ function App() {
 
 
             <Route path="/groups" element={<GroupList />} />
+            <Route path="/groups/new" element={<GroupsForm />} />
+            {/* <Route path="/groups/:id" element={<GroupsDetail />} /> */}
+            <Route path="/groups/:id/edit" element={<GroupsForm />} />
           </Routes>
         </main>
       </div>
