@@ -4,37 +4,12 @@ import './CharactersForm.css'
 
 const emptyStatRow = () => ({ name: '', value: '' })
 
-const emptyStatusRow = () => ({
-  name: '',
-  target: '',      // 대상
-  value: '',       // 값
-  mode: 'fixed',  // 'fixed' | 'percent' 
-  duration: '',    // 지속시간 (빈 값 = 무한)
-  timing: 'one_time',    // 지속시간 (빈 값 = 무한)
-  source: '',      // 상태를 건 주체 (없어도 됨)
-  memo: '',        // 메모 (없어도 됨)
-})
-
-const STATUS_MODE_OPTIONS = [
-  { value: 'fixed', label: '고정값' },
-  { value: 'percent', label: '퍼센트' },
-]
-
-const STATUS_TIMING_OPTIONS = [
-  { value: 'one_time', label: '한 번만' },
-  { value: 'turn_start', label: '매 턴 시작시' },
-  { value: 'turn_end', label: '매 턴 종료시' },
-  { value: 'hp_calc', label: '체력 계산시마다' },
-]
-
-// 이름을 추후 드롭박스로 전환할 때를 대비한 프리셋 테이블.
-// key: 상태 이름, value: emptyStatusRow()의 일부 필드를 덮어쓸 기본값.
-// 드롭박스에서 이 목록에 있는 이름을 "선택"하면 옆 필드들이 자동으로 채워지고,
-// 목록에 없는 이름을 직접 "입력"하면 기본값 없이 빈 칸으로 남는다.
-// 지금은 텍스트 입력이라 항상 직접 입력 취급되므로 비어 있어도 동작에는 문제없음.
-const STATUS_NAME_PRESETS = {
-  // 예시: '기절': { target: '적 전체', mode: 'fixed', duration: '1' },
-}
+import {
+  emptyStatus,
+  STATUS_MODE_OPTIONS,
+  STATUS_TIMING_OPTIONS,
+  STATUS_NAME_PRESETS,
+} from "../../constants/status";
 
 function CharacterForm() {
   const { id: cid } = useParams()

@@ -4,34 +4,13 @@ import './StatusFormCard.css'
 
 const emptyStat = () => ({ name: "", default: "" });
 
-// CharactersForm.js와 동일한 상태 필드 구성
-const emptyStatus = () => ({
-  name: "",
-  target: "",      // 대상
-  value: "",        // 값
-  mode: "fixed",     // 'fixed' | 'percent'
-  duration: "",      // 지속시간 (빈 값 = 무한)
-  timing: "one_time",// 적용 시점
-  source: "",        // 상태를 건 주체 (없어도 됨)
-  memo: "",          // 메모 (없어도 됨)
-});
+import {
+  emptyStatus,
+  STATUS_MODE_OPTIONS,
+  STATUS_TIMING_OPTIONS,
+  STATUS_NAME_PRESETS,
+} from "../../constants/status";
 
-const STATUS_MODE_OPTIONS = [
-  { value: 'fixed', label: '고정값' },
-  { value: 'percent', label: '퍼센트' },
-]
-
-const STATUS_TIMING_OPTIONS = [
-  { value: 'one_time', label: '한 번만' },
-  { value: 'turn_start', label: '매 턴 시작시' },
-  { value: 'turn_end', label: '매 턴 종료시' },
-  { value: 'hp_calc', label: '체력 계산시마다' },
-]
-
-// CharactersForm.js와 동일: 이름 프리셋 (드롭박스 전환 대비)
-const STATUS_NAME_PRESETS = {
-  // 예시: '기절': { target: '적 전체', mode: 'fixed', duration: '1' },
-}
 
 export default function GroupForm() {
   const { gid } = useParams(); // /groups/:gid/edit 라우트에서 사용, 새 그룹이면 undefined
