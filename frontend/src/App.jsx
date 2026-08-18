@@ -15,6 +15,7 @@ import CharactersDetail from './pages/details/CharacterDetail'
 
 import GroupList from './pages/GroupList'
 import GroupsForm from './pages/forms/GroupsForm'
+import GroupDetail from './pages/details/GroupDetail'
 
 import './App.css'
 
@@ -36,7 +37,7 @@ function App() {
 
             <Route path="/groups" element={<GroupList />} />
             <Route path="/groups/new" element={<GroupsForm />} />
-            {/* <Route path="/groups/:id" element={<GroupsDetail />} /> */}
+            <Route path="/groups/:gid" element={<GroupDetail />} />
             <Route path="/groups/:id/edit" element={<GroupsForm />} />
           </Routes>
         </main>
