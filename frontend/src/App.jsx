@@ -38,7 +38,7 @@ function App() {
             <Route path="/groups" element={<GroupList />} />
             <Route path="/groups/new" element={<GroupsForm />} />
             <Route path="/groups/:gid" element={<GroupDetail />} />
-            <Route path="/groups/:id/edit" element={<GroupsForm />} />
+            <Route path="/groups/:gid/edit" element={<GroupsForm />} />
           </Routes>
         </main>
       </div>

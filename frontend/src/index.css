@@ -130,6 +130,15 @@ tbody tr.row-link:hover {
   text-align: center;
 }
 
+.status-table{
+  min-width: 400px;
+  table-layout: fixed;
+}
+.status-table th,
+.status-table td {
+  text-align: center;
+}
+
 /* ---------------------------------------------------- 태그 (시그니처 요소: 스티커 뱃지) */
 .tag {
   display: inline-block;

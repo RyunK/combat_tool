@@ -53,7 +53,7 @@ function GroupList() {
           <tr>
             <th>이름</th>
             <th>분류</th>
-            <th>요구 스탯</th>
+            <th>기본 스탯</th>
             <th>그룹 상태</th>
           </tr>
         </thead>
@@ -81,7 +81,7 @@ function GroupList() {
                     {/* statuses도 배열 */}
                     {g.statuses.map((s) => (
                         <span className="tag status" key={s.id}>
-                        {s.name}: {s.target} {s.mode} {s.value}
+                        {s.name}: {s.target} {s.mode === 'percent' ? `${s.value}%` : s.value}
                         </span>
                     ))}
                 </td>

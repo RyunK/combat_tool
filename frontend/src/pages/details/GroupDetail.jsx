@@ -63,9 +63,9 @@ function GroupDetail() {
       <h3>분류</h3>
       <p>{group.category ? <span className="tag">{group.category}</span> : <span className="hint">분류 없음</span>}</p>
 
-      <h3>요구 스탯</h3>
+      <h3>기본 스탯</h3>
       {statSchema.length === 0 ? (
-        <p className="hint">등록된 요구 스탯이 없습니다.</p>
+        <p className="hint">등록된 기본 스탯이 없습니다.</p>
       ) : (
         <table className="stat-table">
           <thead>
@@ -79,11 +79,11 @@ function GroupDetail() {
         </table>
       )}
 
-      <h3>그룹 전체 상태</h3>
+      <h3>그룹 상태</h3>
       {statuses.length === 0 ? (
         <p className="hint">현재 적용된 상태가 없습니다.</p>
       ) : (
-        <table className="stat-table">
+        <table className="status-table">
           <thead>
             <tr>
               <th>이름</th>

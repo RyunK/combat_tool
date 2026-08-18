@@ -1,5 +1,12 @@
 import { useState, useEffect } from 'react'
 import { useParams, Link, useNavigate } from 'react-router-dom'
+import { STATUS_MODE_OPTIONS, STATUS_TIMING_OPTIONS } from '../../constants/status'
+
+const modeLabel = (mode) =>
+  STATUS_MODE_OPTIONS.find((o) => o.value === mode)?.label ?? mode
+
+const timingLabel = (timing) =>
+  STATUS_TIMING_OPTIONS.find((o) => o.value === timing)?.label ?? timing ?? '-'
 
 function CharacterDetail() {
   const { id: cid } = useParams()
@@ -55,6 +62,7 @@ function CharacterDetail() {
     .filter(Boolean)
 
   const statEntries = Object.entries(character.base_stats || {})
+  const statuses = character.statuses || []
 
   return (
     <div>
@@ -86,17 +94,38 @@ function CharacterDetail() {
         </table>
       )}
 
-      <h3>상태(status)</h3>
-      {(!character.statuses || character.statuses.length === 0) ? (
+      <h3>상태</h3>
+      {statuses.length === 0 ? (
         <p className="hint">현재 적용된 상태가 없습니다.</p>
       ) : (
-        <div>
-          {character.statuses.map((s, i) => (
-            <span className="tag status" key={s.id ?? i}>
-              {s.name}{s.value !== undefined ? ` (${s.value})` : ''}
-            </span>
-          ))}
-        </div>
+        <table className="status-table">
+          <thead>
+            <tr>
+              <th>이름</th>
+              <th>대상</th>
+              <th>값</th>
+              <th>적용 방식</th>
+              <th>지속시간</th>
+              <th>적용 시점</th>
+              <th>주체</th>
+              <th>메모</th>
+            </tr>
+          </thead>
+          <tbody>
+            {statuses.map((s, i) => (
+              <tr key={s.id ?? i}>
+                <td>{s.name}</td>
+                <td>{s.target}</td>
+                <td>{s.value}{s.mode === 'percent' ? '%' : ''}</td>
+                <td>{modeLabel(s.mode)}</td>
+                <td>{s.duration === null || s.duration === undefined || s.duration === '' ? '무한' : s.duration}</td>
+                <td>{timingLabel(s.timing)}</td>
+                <td>{s.source || '-'}</td>
+                <td>{s.memo || '-'}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       )}
 
       <div className="btn-row form-default-row" style={{ marginTop: 20 }}>

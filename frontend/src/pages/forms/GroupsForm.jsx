@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, Link } from "react-router-dom";
 import './StatusFormCard.css'
 
 const emptyStat = () => ({ name: "", default: "" });
@@ -100,7 +100,7 @@ export default function GroupForm() {
     setError(null);
 
     const payload = {
-      id: gid,
+      id: isEdit ? gid : null,
       name,
       category: category || null,
       stat_schema: statSchema
@@ -121,7 +121,7 @@ export default function GroupForm() {
     };
 
     try {
-      const res = await fetch(isEdit ? `/api/groups/${gid}` : "/api/groups", {
+      const res = await fetch(`/api/groups`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
@@ -164,9 +164,9 @@ export default function GroupForm() {
           />
         </div>
 
-        <h3>요구 스탯</h3>
+        <h3>기본 스탯</h3>
         <p className="hint">
-          이 그룹에 속한 캐릭터가 가져야 할 스탯과 기본값입니다. 예: 탱커 그룹 → HP(기본
+          이 그룹에 속한 캐릭터가 가질 스탯과 기본값입니다. 예: 탱커 그룹 → HP(기본
           150), DEF(기본 10)
         </p>
         {statSchema.map((row, idx) => (
@@ -198,7 +198,7 @@ export default function GroupForm() {
         ))}
         <div className="btn-row" style={{ marginBottom: 20 }}>
           <button type="button" className="btn btn-secondary" onClick={addStatRow}>
-            + 요구 스탯 추가
+            + 기본 스탯 추가
           </button>
         </div>
 
@@ -302,13 +302,14 @@ export default function GroupForm() {
           <button type="submit" className="btn btn-primary" disabled={saving}>
             {saving ? "저장 중..." : "저장"}
           </button>
-          <button
+          {/* <button
             type="button"
             className="btn btn-secondary"
             onClick={() => navigate("/groups")}
           >
             취소
-          </button>
+          </button> */}
+          <Link to={isEdit ? `/groups/${gid}` : '/groups'} className="btn btn-secondary">취소</Link>
         </div>
       </form>
     </div>

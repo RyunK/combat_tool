@@ -1,1 +1,1 @@
-{"_default": {"1": {"id": "9c5acc6a", "name": "기본 캐릭터", "category": "역할", "stat_schema": [{"name": "체력", "default": 100.0}, {"name": "공격력", "default": 6.0}, {"name": "마력", "default": 8.0}], "statuses": []}}}
+{"_default": {"1": {"id": "9c5acc6a", "name": "기본 캐릭터", "category": "역할", "stat_schema": [{"name": "체력", "default": 100.0}, {"name": "공격력", "default": 6.0}, {"name": "마력", "default": 8.0}], "statuses": [{"id": "9a75d8a0", "name": "버프", "target": "공격력", "mode": "fixed", "value": 2.0, "duration": null, "timing": "one_time", "source": null, "note": null}]}}}
