@@ -110,14 +110,14 @@ function CharacterForm() {
     setStatusRows((rows) => rows.map((r, i) => {
       if (i !== idx) return r
       if (selectedFromPreset && STATUS_NAME_PRESETS[value]) {
-        return { ...emptyStatusRow(), ...STATUS_NAME_PRESETS[value], name: value }
+        return { ...emptyStatus(), ...STATUS_NAME_PRESETS[value], name: value }
       }
       return { ...r, name: value }
     }))
   }
 
   function addStatusRow() {
-    setStatusRows((rows) => [...rows, emptyStatusRow()])
+    setStatusRows((rows) => [...rows, emptyStatus()])
   }
   function removeStatusRow(idx) {
     setStatusRows((rows) => rows.filter((_, i) => i !== idx))
