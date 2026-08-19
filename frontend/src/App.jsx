@@ -21,6 +21,10 @@ import FormulaList from './pages/FormulaList'
 import FormulaDetail from './pages/details/FormulaDetail'
 import FormulaForm from './pages/forms/FormulaForm'
 
+import SkillList from './pages/SkillList'
+import SkillDetail from './pages/details/SkillDetail'
+import SkillForm from './pages/forms/SkillForm'
+
 import './App.css'
 
 const basename = import.meta.env.DEV ? '/' : '/app'
@@ -48,6 +52,11 @@ function App() {
             <Route path="/formulas/new" element={<FormulaForm />} />
             <Route path="/formulas/:id" element={<FormulaDetail />} />
             <Route path="/formulas/:id/edit" element={<FormulaForm />} />
+
+            <Route path="/skills" element={<SkillList />} />
+            <Route path="/skills/new" element={<SkillForm />} />
+            <Route path="/skills/:id" element={<SkillDetail />} />
+            <Route path="/skills/:id/edit" element={<SkillForm />} />
           </Routes>
         </main>
       </div>

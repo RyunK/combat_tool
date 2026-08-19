@@ -20,7 +20,7 @@ from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 import uvicorn
 
-from router import index, combat, api, characters_api, groups_api, formulas_api
+from router import index, combat, api, characters_api, groups_api, formulas_api, skills_api
 
 app = FastAPI(title="전투 GM 계산기")
 app.mount("/static", StaticFiles(directory="web/static"), name="static")
@@ -31,6 +31,7 @@ app.include_router(api.router)
 app.include_router(characters_api.router)
 app.include_router(groups_api.router)
 app.include_router(formulas_api.router)
+app.include_router(skills_api.router)
 
 
 def _open_browser():
