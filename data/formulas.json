@@ -1,0 +1,1 @@
+{"_default": {"1": {"id": "magic_basic", "name": "기본 마법", "expression": "max(0, matk * multiplier - mdef * 0.3)", "description": "마법 공격력 기반. 마법 방어력의 30%만 경감에 반영."}}}
