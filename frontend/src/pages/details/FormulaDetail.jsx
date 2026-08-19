@@ -57,7 +57,7 @@ function FormulaDetail() {
       <p><code>{formula.expression}</code></p>
 
       <h3>설명</h3>
-      <p className="hint">{formula.description || '설명이 없습니다.'}</p>
+      <p >{formula.description || '설명이 없습니다.'}</p>
 
       <div className="btn-row form-default-row" style={{ marginTop: 20 }}>
         <Link to={`/formulas/${fid}/edit`} className="btn btn-primary">수정</Link>

@@ -58,7 +58,7 @@ function FormulaList() {
               <td><strong>{f.name}</strong></td>
               <td><span className="tag">{f.id}</span></td>
               <td><code>{f.expression}</code></td>
-              <td className="hint">{f.description || '-'}</td>
+              <td className="">{f.description || '-'}</td>
             </tr>
           ))}
         </tbody>
