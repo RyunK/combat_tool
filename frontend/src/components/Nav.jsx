@@ -10,7 +10,7 @@ function Nav() {
         <Link to="/groups">그룹</Link>
         <Link to="/characters">캐릭터</Link>
         <Link to="/characters">스킬</Link>
-        <Link to="/characters">수식</Link>
+        <Link to="/formulas">수식</Link>
         <a href={backendUrl('/combat')}>전투 계산</a>
       </nav>
     </header>

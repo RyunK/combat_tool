@@ -53,3 +53,15 @@ class Character(BaseModel):
     base_stats: dict[str, float] = Field(default_factory=dict)
     statuses: list[StatusEffect] = Field(default_factory=list)
     current_hp: Optional[float] = None
+
+class Formula(BaseModel):
+    id: str = Field(default_factory=new_id)
+    name: str
+    expression: str                 # evaluate_formula 에 넘길 수식 문자열
+
+
+class Skill(BaseModel):
+    id: str = Field(default_factory=new_id)
+    name: str
+    formula_id: str                 # Formula.id 참조 (formula "이름" 문자열 대신 id로 참조 권장)
+    variables: dict[str, str | float] = Field(default_factory=dict)

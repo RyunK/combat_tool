@@ -17,6 +17,10 @@ import GroupList from './pages/GroupList'
 import GroupsForm from './pages/forms/GroupsForm'
 import GroupDetail from './pages/details/GroupDetail'
 
+import FormulaList from './pages/FormulaList'
+import FormulaDetail from './pages/details/FormulaDetail'
+import FormulaForm from './pages/forms/FormulaForm'
+
 import './App.css'
 
 const basename = import.meta.env.DEV ? '/' : '/app'
@@ -39,6 +43,11 @@ function App() {
             <Route path="/groups/new" element={<GroupsForm />} />
             <Route path="/groups/:gid" element={<GroupDetail />} />
             <Route path="/groups/:gid/edit" element={<GroupsForm />} />
+            
+            <Route path="/formulas" element={<FormulaList />} />
+            <Route path="/formulas/new" element={<FormulaForm />} />
+            <Route path="/formulas/:id" element={<FormulaDetail />} />
+            <Route path="/formulas/:id/edit" element={<FormulaForm />} />
           </Routes>
         </main>
       </div>
