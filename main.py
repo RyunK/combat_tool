@@ -38,4 +38,4 @@ def _open_browser():
 
 if __name__ == "__main__":
     threading.Timer(1.2, _open_browser).start()
-    uvicorn.run(app, host="127.0.0.1", port=8901, reload=True)
+    uvicorn.run("main:app", host="127.0.0.1", port=8901, reload=True)
