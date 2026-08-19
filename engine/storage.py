@@ -14,6 +14,8 @@ class Storage:
         Path(data_dir).mkdir(parents=True, exist_ok=True)
         self.db_groups = TinyDB(f"{data_dir}/groups.json", encoding="utf-8", ensure_ascii=False)
         self.db_chars = TinyDB(f"{data_dir}/characters.json", encoding="utf-8", ensure_ascii=False)
+        self.db_formulas = TinyDB(f"{data_dir}/formulas.json", encoding="utf-8", ensure_ascii=False)
+        self.db_skills = TinyDB(f"{data_dir}/skills.json", encoding="utf-8", ensure_ascii=False)
 
     # ---- groups ----
     def save_group(self, group: dict):
@@ -46,3 +48,35 @@ class Storage:
     def delete_character(self, cid: str):
         Q = Query()
         self.db_chars.remove(Q.id == cid)
+
+     # ---- formulas ----
+    def save_formula(self, formula: dict):
+        Q = Query()
+        self.db_formulas.upsert(formula, Q.id == formula["id"])
+
+    def get_formulas(self) -> list[dict]:
+        return self.db_formulas.all()
+
+    def get_formula(self, fid: str) -> dict | None:
+        Q = Query()
+        return self.db_formulas.get(Q.id == fid)
+
+    def delete_formula(self, fid: str):
+        Q = Query()
+        self.db_formulas.remove(Q.id == fid)
+
+    # ---- skills ----
+    def save_skill(self, skill: dict):
+        Q = Query()
+        self.db_skills.upsert(skill, Q.id == skill["id"])
+
+    def get_skills(self) -> list[dict]:
+        return self.db_skills.all()
+
+    def get_skill(self, sid: str) -> dict | None:
+        Q = Query()
+        return self.db_skills.get(Q.id == sid)
+
+    def delete_skill(self, sid: str):
+        Q = Query()
+        self.db_skills.remove(Q.id == sid)
