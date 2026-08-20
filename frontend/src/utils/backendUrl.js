@@ -9,7 +9,7 @@
  * import.meta.env.DEV 는 vite가 자동으로 넣어주는 값으로,
  * `npm run dev` 로 실행 중이면 true, `npm run build` 결과물에서는 false 이다.
  */
-const BACKEND_ORIGIN = import.meta.env.DEV ? 'http://127.0.0.1:8000' : ''
+const BACKEND_ORIGIN = import.meta.env.DEV ? 'http://127.0.0.1:8901' : ''
 
 export function backendUrl(path) {
   return BACKEND_ORIGIN + path
