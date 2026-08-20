@@ -1,5 +1,7 @@
 from typing import List, Optional, Dict
 
+import traceback
+
 from fastapi import APIRouter, Request
 from pydantic import BaseModel
 
@@ -177,7 +179,7 @@ async def combat_execute_batch(payload: BatchExecuteRequest):
             caster_stats = compute_effective_stats(caster, groups_by_id)
             target_stats = compute_effective_stats(target, groups_by_id)
 
-            calc = execute_skill(skill, formulas, caster_stats, target_stats)
+            calc = execute_skill(storage, item.skill_id, caster_stats, target_stats)
 
             entry.skill_name = calc.skill_name
             entry.formula_id = calc.formula_id
@@ -187,6 +189,7 @@ async def combat_execute_batch(payload: BatchExecuteRequest):
             entry.caster_name = caster.name
             entry.target_name = target.name
         except Exception as e:
+            traceback.print_exc()
             print(f"[combat_execute_batch] error for item {item.id}: {e}")
             entry.error = str(e)
 
