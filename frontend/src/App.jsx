@@ -25,6 +25,8 @@ import SkillList from './pages/SkillList'
 import SkillDetail from './pages/details/SkillDetail'
 import SkillForm from './pages/forms/SkillForm'
 
+import Combat from './pages/combat/combat'
+
 import './App.css'
 
 const basename = import.meta.env.DEV ? '/' : '/app'
@@ -57,6 +59,8 @@ function App() {
             <Route path="/skills/new" element={<SkillForm />} />
             <Route path="/skills/:id" element={<SkillDetail />} />
             <Route path="/skills/:id/edit" element={<SkillForm />} />
+
+            <Route path="/combat" element={<Combat />} />
           </Routes>
         </main>
       </div>

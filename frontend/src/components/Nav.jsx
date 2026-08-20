@@ -11,7 +11,7 @@ function Nav() {
         <Link to="/characters">캐릭터</Link>
         <Link to="/skills">스킬</Link>
         <Link to="/formulas">수식</Link>
-        <a href={backendUrl('/combat')}>전투 계산</a>
+        <Link to="/combat">전투 계산</Link>
       </nav>
     </header>
   )
