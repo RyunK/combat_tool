@@ -3,7 +3,7 @@ import Dropdown from './Dropdown'
 
 function TeamTable({
   team, characters, skills,
-  onRename, onJudge, onRemoveTeam,
+  onRename, onJudge, onSave, onRemoveTeam,
   onAddRow, onRemoveRow, onUpdateRow,
   canRemoveTeam,
 }) {
@@ -44,19 +44,34 @@ function TeamTable({
             title="클릭해서 팀 이름 변경"
             onClick={() => { setDraftName(team.name); setEditingName(true) }}
           >
-            {team.name} <span className="hint">...<i class="fa-solid fa-pen"></i></span>
+            {team.name}
           </h3>
         )}
 
-        <button
-          type="button"
-          className="btn btn-primary"
-          onClick={onJudge}
-          disabled={anyLoading}
-        >
-          {anyLoading ? '계산 중...' : '계산하기'}
-        </button>
+        <div className="btn-row" style={{ flexShrink: 0 }}>
+          <button
+            type="button"
+            className="btn btn-secondary"
+            onClick={onSave}
+            disabled={team.saving}
+            title="현재 팀 이름과 캐릭터 구성을 저장"
+          >
+            {team.saving ? '저장 중...' : '저장'}
+          </button>
+          <button
+            type="button"
+            className="btn btn-primary"
+            onClick={onJudge}
+            disabled={anyLoading}
+          >
+            {anyLoading ? '계산 중...' : '판정'}
+          </button>
+        </div>
       </div>
+
+      {team.saveError && (
+        <div className="error" style={{ marginBottom: 10 }}>{team.saveError}</div>
+      )}
 
       <table className="team-table">
         <colgroup>
@@ -69,9 +84,9 @@ function TeamTable({
           {/* 계산식 */}
           <col style={{ width: '26%' }} />
           {/* 결과 */}
-          <col style={{ width: '13%' }} />
+          <col style={{ width: '14%' }} />
           {/* x 버튼 */}
-          <col style={{ width: '30px' }} />
+          <col style={{ width: '36px' }} />
         </colgroup>
         <thead>
           <tr>
@@ -190,7 +205,7 @@ function TeamTable({
             title="팀 삭제"
             onClick={onRemoveTeam}
           >
-            팀 삭제
+            ×
           </button>
         )}
       </div>

@@ -146,7 +146,7 @@ def saved_teams():
     return result
 
 
-@router.post("")
+@router.post("/api/teams")
 def api_team_save(payload: TeamIn):
     team = Team(
         id=payload.id or new_id(),

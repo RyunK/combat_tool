@@ -26,6 +26,24 @@ function emptyTeam(name) {
     id: uid('team'),
     name,
     rows: [emptyRow()],
+    saving: false,
+    saveError: null,
+  }
+}
+
+// 저장된 팀(GET /combat/api/teams 응답 하나)을 화면에서 쓰는 팀 형태로 변환.
+// 요구사항: 팀 이름 + 각 행의 캐릭터(대상/스킬은 비워둔 채)만 불러오면 됨.
+function teamFromSaved(saved) {
+  const chars = saved.characters || []
+  const rows = chars.length > 0
+    ? chars.map(c => ({ ...emptyRow(), casterId: c.id }))
+    : [emptyRow()]
+  return {
+    id: saved.id,
+    name: saved.name,
+    rows,
+    saving: false,
+    saveError: null,
   }
 }
 
@@ -39,23 +57,42 @@ function Combat() {
 
   useEffect(() => {
     let cancelled = false
-    async function loadMeta() {
+    async function loadAll() {
       setMetaLoading(true)
       setMetaError(null)
       try {
-        const res = await fetch(backendUrl('/combat/api/meta'))
-        if (!res.ok) throw new Error(`메타 정보를 불러오지 못했습니다 (${res.status})`)
-        const data = await res.json()
+        const [metaRes, teamsRes] = await Promise.all([
+          fetch(backendUrl('/combat/api/meta')),
+          fetch(backendUrl('/combat/api/teams')),
+        ])
+        if (!metaRes.ok) throw new Error(`메타 정보를 불러오지 못했습니다 (${metaRes.status})`)
+        const metaData = await metaRes.json()
         if (cancelled) return
-        setCharacters(data.characters || [])
-        setSkills(data.skills || [])
+        setCharacters(metaData.characters || [])
+        setSkills(metaData.skills || [])
+
+        if (teamsRes.ok) {
+          const savedTeams = await teamsRes.json()
+          if (cancelled) return
+          setTeams(
+            Array.isArray(savedTeams) && savedTeams.length > 0
+              ? savedTeams.map(teamFromSaved)
+              : [emptyTeam('팀1')]
+          )
+        } else {
+          // 저장된 팀 목록을 못 가져와도, 계산 기능 자체는 그대로 쓸 수 있게 기본 팀으로 시작
+          setTeams([emptyTeam('팀1')])
+        }
       } catch (e) {
-        if (!cancelled) setMetaError(e.message || String(e))
+        if (!cancelled) {
+          setMetaError(e.message || String(e))
+          setTeams([emptyTeam('팀1')])
+        }
       } finally {
         if (!cancelled) setMetaLoading(false)
       }
     }
-    loadMeta()
+    loadAll()
     return () => { cancelled = true }
   }, [])
 
@@ -94,6 +131,41 @@ function Combat() {
       }
     }))
   }, [])
+
+  // ------------------------------------------------------------ 팀 저장
+  const saveTeam = useCallback(async (teamId) => {
+    const team = teams.find(t => t.id === teamId)
+    if (!team) return
+
+    setTeams(prev => prev.map(t => t.id !== teamId ? t : { ...t, saving: true, saveError: null }))
+
+    // 백엔드 TeamIn은 팀 이름 + 캐릭터 id 목록만 받으므로, 각 행의 '캐릭터' 칸만 모은다.
+    const characterIds = team.rows.map(r => r.casterId).filter(Boolean)
+
+    try {
+      const res = await fetch(backendUrl('/combat/api/teams'), {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          id: team.id,
+          name: team.name,
+          character_ids: characterIds,
+        }),
+      })
+      if (!res.ok) throw new Error(`팀 저장에 실패했습니다 (${res.status})`)
+      const saved = await res.json()
+
+      setTeams(prev => prev.map(t => t.id !== teamId ? t : {
+        ...t,
+        id: saved.id, // 새로 만든 팀이면 서버가 내려준 id로 맞춰서, 다음 저장부터는 같은 팀을 덮어쓰게 함
+        saving: false,
+        saveError: null,
+      }))
+    } catch (e) {
+      const message = e.message || String(e)
+      setTeams(prev => prev.map(t => t.id !== teamId ? t : { ...t, saving: false, saveError: message }))
+    }
+  }, [teams])
 
   // ------------------------------------------------------------ 판정 (팀 전체 배치 계산)
   const judgeTeam = useCallback(async (teamId) => {
@@ -189,6 +261,7 @@ function Combat() {
           skills={skills}
           onRename={(name) => renameTeam(team.id, name)}
           onJudge={() => judgeTeam(team.id)}
+          onSave={() => saveTeam(team.id)}
           onRemoveTeam={() => removeTeam(team.id)}
           onAddRow={() => addRow(team.id)}
           onRemoveRow={(rowId) => removeRow(team.id, rowId)}
