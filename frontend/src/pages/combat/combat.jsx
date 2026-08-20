@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback } from 'react'
 import { backendUrl } from '../../utils/backendUrl'
-import TeamTable from '../../components/TeamTable'
+import TeamTable from '../../components/Teamtable'
 
 let _uid = 0
 function uid(prefix) {

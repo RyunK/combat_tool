@@ -44,7 +44,7 @@ function TeamTable({
             title="클릭해서 팀 이름 변경"
             onClick={() => { setDraftName(team.name); setEditingName(true) }}
           >
-            {team.name}
+            {team.name} <span className="hint">...<i class="fa-solid fa-pen"></i></span>
           </h3>
         )}
 
@@ -54,7 +54,7 @@ function TeamTable({
           onClick={onJudge}
           disabled={anyLoading}
         >
-          {anyLoading ? '계산 중...' : '판정'}
+          {anyLoading ? '계산 중...' : '계산하기'}
         </button>
       </div>
 
