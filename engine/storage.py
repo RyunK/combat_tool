@@ -16,6 +16,7 @@ class Storage:
         self.db_chars = TinyDB(f"{data_dir}/characters.json", encoding="utf-8", ensure_ascii=False)
         self.db_formulas = TinyDB(f"{data_dir}/formulas.json", encoding="utf-8", ensure_ascii=False)
         self.db_skills = TinyDB(f"{data_dir}/skills.json", encoding="utf-8", ensure_ascii=False)
+        self.db_teams = TinyDB(f"{data_dir}/teams.json", encoding="utf-8", ensure_ascii=False)
 
     # ---- groups ----
     def save_group(self, group: dict):
@@ -80,3 +81,19 @@ class Storage:
     def delete_skill(self, sid: str):
         Q = Query()
         self.db_skills.remove(Q.id == sid)
+
+    # ---- teams ----
+    def save_team(self, team: dict):
+        Q = Query()
+        self.db_teams.upsert(team, Q.id == team["id"])
+
+    def get_teams(self) -> list[dict]:
+        return self.db_teams.all()
+
+    def get_team(self, tid: str) -> dict | None:
+        Q = Query()
+        return self.db_teams.get(Q.id == tid)
+
+    def delete_team(self, tid: str):
+        Q = Query()
+        self.db_teams.remove(Q.id == tid)
