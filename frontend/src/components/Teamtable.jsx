@@ -69,9 +69,9 @@ function TeamTable({
           {/* 계산식 */}
           <col style={{ width: '26%' }} />
           {/* 결과 */}
-          <col style={{ width: '14%' }} />
+          <col style={{ width: '13%' }} />
           {/* x 버튼 */}
-          <col style={{ width: '36px' }} />
+          <col style={{ width: '30px' }} />
         </colgroup>
         <thead>
           <tr>
@@ -190,7 +190,7 @@ function TeamTable({
             title="팀 삭제"
             onClick={onRemoveTeam}
           >
-            ×
+            팀 삭제
           </button>
         )}
       </div>
