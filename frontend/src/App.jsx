@@ -8,20 +8,20 @@
  */
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import Nav from './components/Nav'
-import Dashboard from './pages/Dashboard'
-import CharacterList from './pages/CharacterList'
+import Dashboard from './pages/lists/Dashboard'
+import CharacterList from './pages/lists/CharacterList'
 import CharactersForm from './pages/forms/CharactersForm'
 import CharactersDetail from './pages/details/CharacterDetail'
 
-import GroupList from './pages/GroupList'
+import GroupList from './pages/lists/GroupList'
 import GroupsForm from './pages/forms/GroupsForm'
 import GroupDetail from './pages/details/GroupDetail'
 
-import FormulaList from './pages/FormulaList'
+import FormulaList from './pages/lists/FormulaList'
 import FormulaDetail from './pages/details/FormulaDetail'
 import FormulaForm from './pages/forms/FormulaForm'
 
-import SkillList from './pages/SkillList'
+import SkillList from './pages/lists/SkillList'
 import SkillDetail from './pages/details/SkillDetail'
 import SkillForm from './pages/forms/SkillForm'
 
