@@ -1,5 +1,6 @@
 import { useEffect, useState, useCallback } from 'react'
 import { backendUrl } from '../../utils/backendUrl'
+import TeamTable from '../../components/TeamTable'
 
 let _uid = 0
 function uid(prefix) {
@@ -11,12 +12,11 @@ function emptyRow() {
   return {
     id: uid('row'),
     casterId: '',
-    targetId: '',
+    targetIds: [],
     skillId: '',
-    // 계산 결과 (판정 이후 채워짐)
-    expression: null,
-    result: null,
-    error: null,
+    // 판정 이후 채워지는, 대상별 계산 결과 목록
+    results: [],
+    rowError: null,
     loading: false,
   }
 }
@@ -102,21 +102,33 @@ function Combat() {
 
     setTeams(prev => prev.map(t => t.id !== teamId ? t : {
       ...t,
-      rows: t.rows.map(r => ({ ...r, loading: true, error: null })),
+      rows: t.rows.map(r => ({ ...r, loading: true, rowError: null })),
     }))
 
-    const items = team.rows.map(r => ({
-      id: r.id,
-      caster_id: r.casterId || null,
-      target_id: r.targetId || null,
-      skill_id: r.skillId || null,
-    }))
+    // 대상을 여러 명 선택한 행은 대상 수만큼 배치 아이템으로 펼친다.
+    // 대상을 하나도 안 골랐으면(검증 에러를 그대로 보여주기 위해) null 하나로 펼친다.
+    const items = []
+    team.rows.forEach(r => {
+      const targetIds = r.targetIds.length > 0 ? r.targetIds : [null]
+      targetIds.forEach(targetId => {
+        items.push({
+          id: `${r.id}::${targetId ?? '_empty'}`,
+          rowId: r.id,
+          targetId,
+          caster_id: r.casterId || null,
+          target_id: targetId || null,
+          skill_id: r.skillId || null,
+        })
+      })
+    })
 
     try {
       const res = await fetch(backendUrl('/combat/api/execute-batch'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ items }),
+        body: JSON.stringify({
+          items: items.map(({ id, caster_id, target_id, skill_id }) => ({ id, caster_id, target_id, skill_id })),
+        }),
       })
       if (!res.ok) throw new Error(`계산 요청에 실패했습니다 (${res.status})`)
       const data = await res.json()
@@ -125,22 +137,28 @@ function Combat() {
       setTeams(prev => prev.map(t => t.id !== teamId ? t : {
         ...t,
         rows: t.rows.map(r => {
-          const found = byId[r.id]
-          if (!found) return { ...r, loading: false, error: '결과를 받지 못했습니다.' }
-          return {
-            ...r,
-            loading: false,
-            expression: found.expression,
-            result: found.result,
-            error: found.error,
-          }
+          const rowItems = items.filter(it => it.rowId === r.id)
+          const results = rowItems.map(it => {
+            const found = byId[it.id]
+            if (!found) {
+              return { targetId: it.targetId, targetName: null, expression: null, result: null, error: '결과를 받지 못했습니다.' }
+            }
+            return {
+              targetId: it.targetId,
+              targetName: found.target_name,
+              expression: found.expression,
+              result: found.result,
+              error: found.error,
+            }
+          })
+          return { ...r, loading: false, results }
         }),
       }))
     } catch (e) {
       const message = e.message || String(e)
       setTeams(prev => prev.map(t => t.id !== teamId ? t : {
         ...t,
-        rows: t.rows.map(r => ({ ...r, loading: false, error: message })),
+        rows: t.rows.map(r => ({ ...r, loading: false, rowError: message })),
       }))
     }
   }, [teams])
@@ -185,164 +203,6 @@ function Combat() {
         </button>
       </div>
     </section>
-  )
-}
-
-function TeamTable({
-  team, characters, skills,
-  onRename, onJudge, onRemoveTeam,
-  onAddRow, onRemoveRow, onUpdateRow,
-  canRemoveTeam,
-}) {
-  const [editingName, setEditingName] = useState(false)
-  const [draftName, setDraftName] = useState(team.name)
-
-  const commitName = () => {
-    const trimmed = draftName.trim()
-    onRename(trimmed || team.name)
-    setEditingName(false)
-  }
-
-  const anyLoading = team.rows.some(r => r.loading)
-
-  return (
-    <div className="card" style={{ textAlign: 'left', marginBottom: 20 }}>
-      {/* 표 왼쪽 위: 팀 이름 / 오른쪽 끝: 판정 버튼 */}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, marginBottom: 10 }}>
-        {editingName ? (
-          <input
-            type="text"
-            value={draftName}
-            autoFocus
-            onChange={e => setDraftName(e.target.value)}
-            onBlur={commitName}
-            onKeyDown={e => { if (e.key === 'Enter') commitName() }}
-            style={{ maxWidth: 220 }}
-          />
-        ) : (
-          <h3
-            style={{ margin: 0, cursor: 'pointer' }}
-            title="클릭해서 팀 이름 변경"
-            onClick={() => { setDraftName(team.name); setEditingName(true) }}
-          >
-            {team.name}
-          </h3>
-        )}
-
-        <button
-          type="button"
-          className="btn btn-primary"
-          onClick={onJudge}
-          disabled={anyLoading}
-        >
-          {anyLoading ? '계산 중...' : '판정'}
-        </button>
-      </div>
-
-      <table>
-        <thead>
-          <tr>
-            <th>캐릭터</th>
-            <th>대상</th>
-            <th>스킬</th>
-            <th>계산식</th>
-            <th>결과</th>
-            <th style={{ width: 36 }}></th>
-          </tr>
-        </thead>
-        <tbody>
-          {team.rows.map(row => (
-            <tr key={row.id}>
-              <td>
-                <select
-                  value={row.casterId}
-                  onChange={e => onUpdateRow(row.id, 'casterId', e.target.value)}
-                >
-                  <option value="">-- 캐릭터 --</option>
-                  {characters.map(c => (
-                    <option key={c.id} value={c.id}>{c.name}</option>
-                  ))}
-                </select>
-              </td>
-              <td>
-                <select
-                  value={row.targetId}
-                  onChange={e => onUpdateRow(row.id, 'targetId', e.target.value)}
-                >
-                  <option value="">-- 대상 --</option>
-                  {characters.map(c => (
-                    <option key={c.id} value={c.id}>{c.name}</option>
-                  ))}
-                </select>
-              </td>
-              <td>
-                <select
-                  value={row.skillId}
-                  onChange={e => onUpdateRow(row.id, 'skillId', e.target.value)}
-                >
-                  <option value="">-- 스킬 --</option>
-                  {skills.map(s => (
-                    <option key={s.id} value={s.id}>
-                      {s.name}{s.pack ? ` (${s.pack})` : ''}
-                    </option>
-                  ))}
-                </select>
-              </td>
-              <td>
-                {row.loading ? (
-                  <span className="hint">계산 중...</span>
-                ) : row.error ? (
-                  <span className="tag status">{row.error}</span>
-                ) : row.expression ? (
-                  <code>{row.expression}</code>
-                ) : (
-                  <span className="hint">-</span>
-                )}
-              </td>
-              <td>
-                {row.loading ? (
-                  '-'
-                ) : row.error ? (
-                  '-'
-                ) : row.result !== null && row.result !== undefined ? (
-                  <strong>{Number(row.result).toFixed(2)}</strong>
-                ) : (
-                  <span className="hint">-</span>
-                )}
-              </td>
-              <td>
-                <button
-                  type="button"
-                  className="btn btn-secondary"
-                  title="이 행 삭제"
-                  onClick={() => onRemoveRow(row.id)}
-                  style={{ padding: '3px 8px' }}
-                >
-                  ×
-                </button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 10 }}>
-        <button type="button" className="btn btn-secondary" onClick={onAddRow}>
-          + 행 추가
-        </button>
-
-        {canRemoveTeam && (
-          <button
-            type="button"
-            className="btn btn-red"
-            title="팀 삭제"
-            onClick={onRemoveTeam}
-          >
-            ×
-          </button>
-        )}
-      </div>
-    </div>
   )
 }
 
