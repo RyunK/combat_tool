@@ -2,7 +2,7 @@ from typing import List, Optional, Dict
 
 import traceback
 
-from fastapi import APIRouter, Request
+from fastapi import APIRouter, Request, HTTPException
 from pydantic import BaseModel
 
 from engine.models import Character, Team, new_id
@@ -155,6 +155,14 @@ def api_team_save(payload: TeamIn):
     )
     storage.save_team(team.model_dump())
     return team.model_dump()
+
+@router.post("/api/teams/{team_id}/delete")
+def api_team_delete(team_id: str):
+    existing = storage.get_team(team_id)
+    if existing is None:
+        raise HTTPException(status_code=404, detail="팀을 찾을 수 없습니다")
+    storage.delete_team(team_id)
+    return {"ok": True}
 
 class BatchItem(BaseModel):
     id: str  # 프론트에서 결과를 다시 매칭하기 위한 행 id (row id)

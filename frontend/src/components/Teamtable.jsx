@@ -204,8 +204,9 @@ function TeamTable({
             className="btn btn-red"
             title="팀 삭제"
             onClick={onRemoveTeam}
+            disabled={team.deleting}
           >
-            ×
+            {team.deleting ? '삭제 중...' : '×'}
           </button>
         )}
       </div>
