@@ -5,7 +5,7 @@ import traceback
 from fastapi import APIRouter, Request
 from pydantic import BaseModel
 
-from engine.models import Character
+from engine.models import Character, Team, new_id
 from engine.stat_calculator import compute_effective_stats
 from engine.skill import execute_skill
 from .deps import storage, templates, get_groups_by_id
@@ -121,6 +121,40 @@ def combat_meta():
         ],
     )
 
+class TeamIn(BaseModel): 
+    id: Optional[str] = None
+    name: str
+    character_ids: list[str] = []
+
+@router.get("/api/teams")
+def saved_teams():
+    """저장된 팀 목록을 반환 (팀 이름 + 캐릭터 id 목록, 이름 목록 )."""
+    teams = storage.get_teams()
+    print(teams)
+    characters_by_id = {c["id"]: c for c in storage.get_characters()}
+    result = []
+    for t in teams:
+        team_entry = {
+            "id": t["id"],
+            "name": t["name"],
+            "character_ids": t.get("character_ids", []),
+            "characters": [
+                {"id": cid, "name": characters_by_id[cid]["name"]} for cid in t.get("character_ids", []) if cid in characters_by_id
+            ],
+        }
+        result.append(team_entry)
+    return result
+
+
+@router.post("")
+def api_team_save(payload: TeamIn):
+    team = Team(
+        id=payload.id or new_id(),
+        name=payload.name,
+        character_ids=payload.character_ids,
+    )
+    storage.save_team(team.model_dump())
+    return team.model_dump()
 
 class BatchItem(BaseModel):
     id: str  # 프론트에서 결과를 다시 매칭하기 위한 행 id (row id)
