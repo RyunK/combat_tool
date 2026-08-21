@@ -8,7 +8,7 @@
  */
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { backendUrl } from '../utils/backendUrl'
+import { backendUrl } from '../../utils/backendUrl'
 
 function Dashboard() {
   const [data, setData] = useState(null)

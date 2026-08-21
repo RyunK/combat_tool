@@ -90,7 +90,7 @@ nav a:hover { color: var(--primary); border-color: var(--pink); }
   border: 2px solid var(--surface-soft);
   transition: transform .15s ease, box-shadow .15s ease;
 }
-.card:hover { transform: translateY(-3px); box-shadow: var(--shadow-card-hover); }
+/* .card:hover { transform: translateY(-3px); box-shadow: var(--shadow-card-hover); } */
 .card-num { font-family: "Jua", sans-serif; font-size: 30px; color: var(--primary); }
 
 .quick-links { line-height: 2.2; list-style: none; padding: 0; }
@@ -138,6 +138,159 @@ tbody tr.row-link:hover {
 .status-table th,
 .status-table td {
   text-align: center;
+}
+
+.team-table {
+  table-layout: fixed;
+  overflow: visible; /* 기본 table { overflow: hidden } 이 드롭다운 메뉴를 잘라내는 걸 방지 */
+}
+.team-table td,
+.team-table th {
+  white-space: normal;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  vertical-align: top;
+}
+.team-table code {
+  display: inline-block;
+  max-width: 100%;
+  white-space: normal;
+  word-break: break-word;
+}
+
+/* ---------------------------------------------------- 커스텀 드롭다운 (긴 이름 줄바꿈용) */
+.dropdown {
+  position: relative;
+  width: 100%;
+}
+.dropdown-toggle {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 6px;
+  width: 100%;
+  padding: 9px 12px;
+  font-size: 14px;
+  font-family: inherit;
+  color: var(--text);
+  background: var(--surface);
+  border: 2px solid var(--surface-soft);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  text-align: left;
+  transition: border-color .12s ease, box-shadow .12s ease;
+}
+.dropdown-toggle:hover { border-color: var(--secondary); }
+.dropdown-toggle[aria-expanded="true"] {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(240, 160, 75, 0.18);
+}
+.dropdown-toggle-label {
+  white-space: normal;
+  word-break: break-word;
+  line-height: 1.35;
+}
+.dropdown-toggle-label.is-placeholder { color: var(--text-muted); }
+.dropdown-caret {
+  flex-shrink: 0;
+  color: var(--text-muted);
+  font-size: 11px;
+  margin-top: 2px;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  z-index: 30;
+  background: var(--surface);
+  border: 2px solid var(--surface-soft);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-card-hover);
+  max-height: 240px;
+  overflow-y: auto;
+  list-style: none;
+  margin: 4px 0 0;
+  padding: 4px;
+}
+.dropdown-option {
+  padding: 8px 10px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  white-space: normal;
+  word-break: break-word;
+  font-size: 14px;
+  line-height: 1.35;
+}
+.dropdown-option:hover { background: var(--surface-soft); }
+.dropdown-option.is-selected {
+  background: var(--secondary);
+  color: var(--secondary-dark);
+  font-weight: 700;
+}
+.dropdown-option-empty { color: var(--text-muted); }
+
+.dropdown-option {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+.dropdown-checkbox {
+  flex-shrink: 0;
+  width: 15px;
+  height: 15px;
+  margin-top: 3px;
+  accent-color: var(--primary);
+  cursor: pointer;
+}
+
+.dropdown-input {
+  display: block;
+  width: 100%;
+  padding: 9px 12px;
+  font-size: 14px;
+  font-family: inherit;
+  color: var(--text);
+  background: var(--surface);
+  border: 2px solid var(--primary);
+  border-radius: var(--radius-sm);
+  box-shadow: 0 0 0 3px rgba(240, 160, 75, 0.18);
+}
+.dropdown-input::placeholder { color: var(--text-muted); }
+
+.dropdown-menu-footer {
+  padding: 4px 4px 0;
+  border-top: 1px solid var(--surface-soft);
+  margin-top: 4px;
+}
+.dropdown-done-btn {
+  width: 100%;
+  padding: 6px 10px;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: var(--primary);
+  color: white;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.dropdown-done-btn:hover { background: var(--primary-dark); }
+
+/* 대상을 여러 명 선택했을 때, 계산식/결과 칸에 대상별로 한 줄씩 쌓임 */
+.result-lines {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.result-line {
+  padding-bottom: 6px;
+  border-bottom: 1px dashed var(--surface-soft);
+}
+.result-line:last-child {
+  padding-bottom: 0;
+  border-bottom: none;
 }
 
 /* ---------------------------------------------------- 태그 (시그니처 요소: 스티커 뱃지) */

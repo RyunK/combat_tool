@@ -65,3 +65,8 @@ class Skill(BaseModel):
     name: str
     formula_id: str                 # Formula.id 참조 (formula "이름" 문자열 대신 id로 참조 권장)
     variables: dict[str, str | float] = Field(default_factory=dict)
+
+class Team(BaseModel):
+    id: str = Field(default_factory=new_id)
+    name: str
+    character_ids: list[str] = Field(default_factory=list)
