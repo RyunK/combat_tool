@@ -45,6 +45,9 @@ function TeamTable({
             onClick={() => { setDraftName(team.name); setEditingName(true) }}
           >
             {team.name}
+            <span className="hint" style={{ fontSize: 10, marginLeft: 4 }}>
+              ... <i class="fa-solid fa-pen"></i>
+            </span>
           </h3>
         )}
 
