@@ -73,6 +73,12 @@ nav a {
   transition: color .15s ease, border-color .15s ease;
 }
 nav a:hover { color: var(--primary); border-color: var(--pink); }
+nav a.active {
+  color: var(--primary-dark);
+  border-color: var(--primary);
+  font-weight: 700;
+}
+
 
 .hint { color: var(--text-muted); font-size: 13px; line-height: 1.6; }
 .text { color: var(--text); font-size: 14px; line-height: 1.6; }

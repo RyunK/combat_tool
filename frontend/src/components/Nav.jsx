@@ -1,17 +1,15 @@
-import { Link } from 'react-router-dom'
-import { backendUrl } from '../utils/backendUrl'
+import { Link, NavLink } from 'react-router-dom'
 
 function Nav() {
   return (
     <header>
       <h1><Link to="/">🍊 감귤 전투 계산기</Link></h1>
       <nav>
-        {/* <a href={backendUrl('/groups')}>그룹</a> */}
-        <Link to="/groups">그룹</Link>
-        <Link to="/characters">캐릭터</Link>
-        <Link to="/skills">스킬</Link>
-        <Link to="/formulas">수식</Link>
-        <Link to="/combat">전투 계산</Link>
+        <NavLink to="/groups" className={({ isActive }) => isActive ? 'active' : undefined}>그룹</NavLink>
+        <NavLink to="/characters" className={({ isActive }) => isActive ? 'active' : undefined}>캐릭터</NavLink>
+        <NavLink to="/skills" className={({ isActive }) => isActive ? 'active' : undefined}>스킬</NavLink>
+        <NavLink to="/formulas" className={({ isActive }) => isActive ? 'active' : undefined}>수식</NavLink>
+        <NavLink to="/combat" className={({ isActive }) => isActive ? 'active' : undefined}>전투 계산</NavLink>
       </nav>
     </header>
   )
