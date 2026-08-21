@@ -5,6 +5,9 @@
 예: expression = "atk * multiplier - def * 0.5"
     variables  = {"atk": 12, "multiplier": 1.2, "def": 4}
 """
+import re
+from typing import TypedDict
+
 from simpleeval import simple_eval, InvalidExpression
 import math
 
@@ -18,9 +21,28 @@ ALLOWED_FUNCTIONS = {
     "ceil": math.ceil,
 }
 
+class FormulaResult(TypedDict):
+    formula: str
+    result: float
 
-def evaluate_formula(expression: str, variables: dict) -> float:
+
+def evaluate_formula(expression: str, variables: dict) -> FormulaResult:
     try:
-        return simple_eval(expression, names=variables, functions=ALLOWED_FUNCTIONS)
+        pattern = r'\b(' + '|'.join(map(re.escape, variables.keys())) + r')\b'
+
+        evaluated_expression = re.sub(
+            pattern,
+            lambda match: str(variables[match.group(0)]),
+            expression
+        )
+
+        result = simple_eval(
+            expression,
+            names=variables,
+            functions=ALLOWED_FUNCTIONS
+        )
+
+        return FormulaResult(formula=evaluated_expression, result=float(result))
+
     except InvalidExpression as e:
         raise ValueError(f"수식 평가 실패: {expression} ({e})")

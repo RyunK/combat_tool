@@ -1,1 +1,1 @@
-{"_default": {"1": {"id": "fireball", "name": "파이어볼", "formula": "magic_basic", "variables": {"matk": "INT", "multiplier": 1.5, "mdef": "target.MDEF"}, "tags": ["magic", "fire"]}}}
+{"_default": {"1": {"id": "fireball", "name": "파이어볼", "formula": "magic_basic", "variables": {"matk": "INT", "multiplier": 1.5, "mdef": "target.MDEF"}, "tags": ["magic", "fire"]}, "2": {"id": "test_skill", "name": "테스트 스킬", "formula": "basic_skill", "variables": {"atk": "공격력"}, "tags": ["공격"]}}}

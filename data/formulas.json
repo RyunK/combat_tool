@@ -1,1 +1,1 @@
-{"_default": {"1": {"id": "magic_basic", "name": "기본 마법", "expression": "max(0, matk * multiplier - mdef * 0.3)", "description": "마법 공격력 기반. 마법 방어력의 30%만 경감에 반영."}}}
+{"_default": {"1": {"id": "magic_basic", "name": "기본 마법", "expression": "max(0, matk * multiplier - mdef * 0.3)", "description": "마법 공격력 기반. 마법 방어력의 30%만 경감에 반영."}, "2": {"id": "basic_skill", "name": "테스트", "expression": "1+3+atk", "description": "스킬을 기본적으로 테스트해보자"}}}

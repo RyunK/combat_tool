@@ -31,6 +31,9 @@ def collect_statuses(character: Character, groups_by_id: dict[str, Group]) -> li
 
 
 def compute_effective_stats(character: Character, groups_by_id: dict[str, Group]) -> dict[str, float]:
+    """
+    캐릭터의 base_stats + 그룹/캐릭터 상태(statuses) 를 적용한 최종 유효 스탯을 계산한다.
+    """
     stats: dict[str, float] = dict(character.base_stats)
     statuses = collect_statuses(character, groups_by_id)
 

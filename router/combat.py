@@ -222,12 +222,13 @@ async def combat_execute_batch(payload: BatchExecuteRequest):
             target_stats = compute_effective_stats(target, groups_by_id)
 
             calc = execute_skill(storage, item.skill_id, caster_stats, target_stats)
+            # print(calc)
 
-            entry.skill_name = calc.skill_name
-            entry.formula_id = calc.formula_id
-            entry.expression = calc.expression
-            entry.variables = calc.variables
-            entry.result = calc.result
+            entry.skill_name = calc["skill_name"]
+            entry.formula_id = calc["formula_id"]
+            entry.expression = calc["result"]["formula"]
+            entry.variables = calc["variables"]
+            entry.result = calc["result"]["result"]
             entry.caster_name = caster.name
             entry.target_name = target.name
         except Exception as e:
