@@ -33,7 +33,7 @@ class StatusEffect(BaseModel):
     mode: Literal["fixed", "percent", "random"] = "fixed"
     value: float = 0
     duration: Optional[int] = None  # None = 무한 지속, 숫자면 남은 턴 수
-    timing: Literal["one_time", "turn_start", "turn_end", "hp_calc"] = "one_time"
+    timing: Literal["once", "every"] = "once"
     source: Optional[str] = None    # 이 상태를 건 주체 (스킬명, 캐릭터명 등)
     note: Optional[str] = None
 

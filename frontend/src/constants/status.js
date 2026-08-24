@@ -7,7 +7,7 @@ export const emptyStatus = () => ({
   value: "",          // 값
   mode: "fixed",       // 'fixed' | 'percent'
   duration: "",        // 지속시간 (빈 값 = 무한)
-  timing: "one_time",  // 적용 시점
+  timing: "once",  // 적용 시점
   source: "",          // 상태를 건 주체 (없어도 됨)
   memo: "",            // 메모 (없어도 됨)
 });
@@ -18,10 +18,8 @@ export const STATUS_MODE_OPTIONS = [
 ];
 
 export const STATUS_TIMING_OPTIONS = [
-  { value: 'one_time', label: '한 번만' },
-  { value: 'turn_start', label: '매 턴 시작시' },
-  { value: 'turn_end', label: '매 턴 종료시' },
-  { value: 'hp_calc', label: '체력 계산시마다' },
+  { value: 'once', label: '한 번만' },
+  { value: 'every', label: '매번' },
 ];
 
 // 이름을 추후 드롭박스로 전환할 때를 대비한 프리셋 테이블.
