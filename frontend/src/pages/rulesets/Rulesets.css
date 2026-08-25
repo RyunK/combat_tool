@@ -1,0 +1,16 @@
+.crt-table{
+  max-width: 500px;
+  table-layout: fixed;
+}
+.crt-table th,
+.crt-table td {
+  text-align: center;
+}
+
+.crt-table input{
+    text-align: center;
+}
+
+.crt-table button {
+  padding: 7px 13px;
+}

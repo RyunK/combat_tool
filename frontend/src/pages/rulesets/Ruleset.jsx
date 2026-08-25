@@ -2,6 +2,8 @@ import { useState } from 'react'
 import CriticalTab from './Criticaltab'
 import TagTab from './Tagtab'
 import OrderTab from './Ordertab'
+import './Rulesets.css'
+
 
 const TABS = [
   { key: 'critical', label: '크리티컬', Component: CriticalTab },

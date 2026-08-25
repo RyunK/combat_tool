@@ -10,6 +10,11 @@ export default function RuleBlock({ rule, onChange, valueLabel = '%' }) {
   const setMode = (mode) => onChange({ ...rule, mode })
   const setFormula = (formula) => onChange({ ...rule, formula })
 
+  const MODES = [
+    { key: 'table', label: '표' },
+    { key: 'formula', label: '수식' },
+  ]
+
   const setRow = (idx, key, value) => {
     const next = rows.map((r, i) => (i === idx ? { ...r, [key]: value } : r))
     onChange({ ...rule, rows: next })
@@ -25,11 +30,17 @@ export default function RuleBlock({ rule, onChange, valueLabel = '%' }) {
 
   return (
     <div>
-      <div className="form-default-row" style={{ maxWidth: 220 }}>
-        <select value={mode} onChange={(e) => setMode(e.target.value)}>
-          <option value="table">표</option>
-          <option value="formula">수식</option>
-        </select>
+      <div className="btn-row" style={{ marginBottom: 12 }}>
+        {MODES.map((m) => (
+          <button
+            key={m.key}
+            type="button"
+            className={mode === m.key ? 'btn btn-primary' : 'btn btn-secondary'}
+            onClick={() => setMode(m.key)}
+          >
+            {m.label}
+          </button>
+        ))}
       </div>
 
       {mode === 'formula' ? (
@@ -44,12 +55,12 @@ export default function RuleBlock({ rule, onChange, valueLabel = '%' }) {
         </div>
       ) : (
         <>
-          <table className="stat-table">
+          <table className="crt-table">
             <thead>
               <tr>
                 <th>조건</th>
                 <th>{valueLabel}</th>
-                <th style={{ width: 40 }}></th>
+                <th style={{ width: 90 }}></th>
               </tr>
             </thead>
             <tbody>
@@ -75,10 +86,9 @@ export default function RuleBlock({ rule, onChange, valueLabel = '%' }) {
                     <button
                       type="button"
                       className="btn btn-red"
-                      style={{ padding: '4px 10px', fontSize: 12 }}
                       onClick={() => removeRow(idx)}
                     >
-                      삭제
+                      ✕
                     </button>
                   </td>
                 </tr>

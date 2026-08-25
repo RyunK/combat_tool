@@ -9,9 +9,7 @@ export default function CriticalTab() {
     mode: 'table',
     formula: '',
     rows: [
-      { condition: '힘 = 1', value: '5' },
-      { condition: '힘 = 2', value: '10' },
-      { condition: '힘 = 3', value: '13' },
+      { condition: '', value: '' },
     ],
   })
 
@@ -30,11 +28,21 @@ export default function CriticalTab() {
       <RuleBlock rule={probability} onChange={setProbability} valueLabel="%" />
 
       <h3 style={{ marginTop: 24 }}>크리티컬 추가값</h3>
-      <div className="form-default-row" style={{ maxWidth: 220 }}>
-        <select value={extraType} onChange={(e) => setExtraType(e.target.value)}>
-          <option value="add">추가값</option>
-          <option value="multiply">배수</option>
-        </select>
+      <div className="btn-row" style={{ marginBottom: 12 }}>
+        <button
+          type="button"
+          className={extraType === 'add' ? 'btn btn-primary' : 'btn btn-secondary'}
+          onClick={() => setExtraType('add')}
+        >
+          추가값
+        </button>
+        <button
+          type="button"
+          className={extraType === 'multiply' ? 'btn btn-primary' : 'btn btn-secondary'}
+          onClick={() => setExtraType('multiply')}
+        >
+          배수
+        </button>
       </div>
       <RuleBlock
         rule={extra}
