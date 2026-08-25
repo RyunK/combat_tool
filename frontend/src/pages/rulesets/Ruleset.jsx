@@ -31,6 +31,15 @@ export default function Ruleset() {
       </div>
 
       <ActiveComponent />
+
+      <button
+        // key={tab.key}
+        type="button"
+        className={'btn btn-red'}
+        // onClick={() => setActiveTab(tab.key)}
+      >
+        저장
+      </button>
     </div>
   )
 }
