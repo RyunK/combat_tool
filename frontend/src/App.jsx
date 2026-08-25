@@ -25,6 +25,8 @@ import SkillList from './pages/lists/SkillList'
 import SkillDetail from './pages/details/SkillDetail'
 import SkillForm from './pages/forms/SkillForm'
 
+import Ruleset from './pages/rulesets/Ruleset'
+
 import Combat from './pages/combat/combat'
 
 import './App.css'
@@ -59,6 +61,8 @@ function App() {
             <Route path="/skills/new" element={<SkillForm />} />
             <Route path="/skills/:id" element={<SkillDetail />} />
             <Route path="/skills/:id/edit" element={<SkillForm />} />
+
+            <Route path="/rulesets" element={<Ruleset />} />
 
             <Route path="/combat" element={<Combat />} />
           </Routes>
