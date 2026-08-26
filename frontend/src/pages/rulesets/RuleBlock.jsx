@@ -95,7 +95,7 @@ export default function RuleBlock({ rule, onChange, valueLabel = '%' }) {
               ))}
             </tbody>
           </table>
-          <div className="btn-row" style={{ marginBottom: 20 }}>
+          <div className="btn-row mb-row">
             <button type="button" className="btn btn-secondary" onClick={addRow}>
               + 행 추가
             </button>
