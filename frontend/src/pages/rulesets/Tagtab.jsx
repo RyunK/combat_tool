@@ -33,13 +33,7 @@ export default function TagTab() {
       {tags.map((tag, idx) => (
         <div
           key={idx}
-          style={{
-            border: '2px solid var(--surface-soft)',
-            borderRadius: 'var(--radius-md)',
-            boxShadow: 'var(--shadow-soft)',
-            padding: '16px 18px',
-            marginBottom: 16,
-          }}
+          className="default-container"
         >
           <div className="form-default-row" style={{ maxWidth: 260, marginBottom: 12 }}>
             <input

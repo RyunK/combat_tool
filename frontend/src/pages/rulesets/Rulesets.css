@@ -14,3 +14,11 @@
 .crt-table button {
   padding: 7px 13px;
 }
+
+.order-container{
+  margin-bottom: 10px;
+}
+
+.confirmed-box{
+  background: var(--surface-soft);
+}

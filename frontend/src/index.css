@@ -10,7 +10,7 @@
   --primary: #ffab76;            /* 라벤더 → 테라코타 톤으로 전환 */
   --primary-dark: #e68052;
   --pink: #D6584F;
-  --mint: #B1C29E;               /* 민트는 웜톤과 안 어울려서 올리브골드로 대체 */
+  --green: #95caa0;               /* 민트는 웜톤과 안 어울려서 올리브골드로 대체 */
   --coral: #D97B5C;
 
   --secondary: #ffefd5;      /* 눌러앉은 웜 브라운 - 보조 버튼용 */
@@ -82,6 +82,19 @@ nav a.active {
 
 .hint { color: var(--text-muted); font-size: 13px; line-height: 1.6; }
 .text { color: var(--text); font-size: 14px; line-height: 1.6; }
+
+
+
+/* ---------------------------------------------------- 레이아웃 설정 */
+.mb-row { margin-bottom: 20px; }
+
+.default-container {
+  border: 2px solid var(--surface-soft);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-soft);
+  padding: 16px 18px;
+  margin-bottom: 16px;
+}
 
 /* ---------------------------------------------------- 대시보드 카드 */
 .cards { display: flex; gap: 14px; margin-bottom: 24px; flex-wrap: wrap; }
@@ -299,7 +312,7 @@ tbody tr.row-link:hover {
   border-bottom: none;
 }
 
-/* ---------------------------------------------------- 태그 (시그니처 요소: 스티커 뱃지) */
+/* ---------------------------------------------------- 태그  */
 .tag {
   display: inline-block;
   background: var(--surface-soft);
@@ -365,6 +378,11 @@ tbody tr.row-link:hover {
 
 .btn-red {
   background: var(--pink);
+  color: white;
+}
+
+.btn-green{
+  background: var(--green);
   color: white;
 }
 
@@ -444,8 +462,6 @@ textarea {
 }
 
 
-/* ---------------------------------------------------- 레이아웃 설정 */
-.mb-row { margin-bottom: 20px; }
 
 /* ---------------------------------------------------- 상태 메시지 */
 .error {

@@ -14,6 +14,20 @@ const TABS = [
 export default function Ruleset() {
   const [activeTab, setActiveTab] = useState('critical')
   const ActiveComponent = TABS.find((tab) => tab.key === activeTab).Component
+    const [saving, setSaving] = useState(false)
+    const [saveError, setSaveError] = useState('')
+
+  const handleSave = async () => {
+    setSaving(true)
+    setSaveError('')
+    try {
+      await postOrder(blocks)
+    } catch (err) {
+      setSaveError(err.message || '저장에 실패했습니다.')
+    } finally {
+      setSaving(false)
+    }
+  }
 
   return (
     <div style={{ padding: 24 }}>
@@ -32,14 +46,13 @@ export default function Ruleset() {
 
       <ActiveComponent />
 
-      <button
-        // key={tab.key}
-        type="button"
-        className={'btn btn-red'}
-        // onClick={() => setActiveTab(tab.key)}
-      >
-        저장
-      </button>
+      <div className="btn-row" >
+        <button type="button" className="btn btn-green" onClick={handleSave} disabled={saving}>
+          {saving ? '저장 중...' : '저장'}
+        </button>
+      </div>
+
+      {saveError && <div className="error">{saveError}</div>}
     </div>
   )
 }
