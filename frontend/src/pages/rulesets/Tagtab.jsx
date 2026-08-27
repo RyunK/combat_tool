@@ -3,15 +3,33 @@ import { useState } from 'react'
 let nextId = 1
 const genId = () => nextId++
 
-function makeBlock() {
+function makeTag(){
   return {
     id: genId(),
-    tag_name,
-    target: '대상',
-    statname,
-    formula,
-
+    name: '', 
+    target: '대상', 
+    change:'스탯', 
+    o_name: '', 
+    formula: '', 
+    direction: '감소' 
   }
+}
+
+/* --------------------------------------------------------
+   백엔드 전송
+   -------------------------------------------------------- */
+
+export async function postTag(tags) {
+  const payload = tags
+  const res = await fetch(backendUrl('/order'), {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+  })
+  if (!res.ok) {
+    throw new Error('저장에 실패했습니다.')
+  }
+  return res.json()
 }
 
 /* =========================================================
@@ -21,7 +39,7 @@ function makeBlock() {
    ========================================================= */
 export default function TagTab() {
   const [tags, setTags] = useState([
-    { name: '', target: '대상', change:'스탯', o_name: '', formula: '', direction: '감소' },
+    {id: genId(), name: '', target: '대상', change:'스탯', o_name: '', formula: '', direction: '감소' },
   ])
 
   const setTag = (idx, key, value) => {
@@ -32,7 +50,7 @@ export default function TagTab() {
   const addTag = () => {
     setTags([
       ...tags,
-      { name: '', target: '대상', change:'스탯', o_name: '', formula: '', direction: '감소' },
+      makeTag()
     ])
   }
 
