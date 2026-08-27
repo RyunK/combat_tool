@@ -1,5 +1,19 @@
 import { useState } from 'react'
 
+let nextId = 1
+const genId = () => nextId++
+
+function makeBlock() {
+  return {
+    id: genId(),
+    tag_name,
+    target: '대상',
+    statname,
+    formula,
+
+  }
+}
+
 /* =========================================================
    태그 탭
    태그 하나 = 박스 하나
@@ -7,7 +21,7 @@ import { useState } from 'react'
    ========================================================= */
 export default function TagTab() {
   const [tags, setTags] = useState([
-    { name: '', target: '대상', stat: '', formula: '', direction: '감소' },
+    { name: '', target: '대상', change:'스탯', o_name: '', formula: '', direction: '감소' },
   ])
 
   const setTag = (idx, key, value) => {
@@ -18,7 +32,7 @@ export default function TagTab() {
   const addTag = () => {
     setTags([
       ...tags,
-      { name: '', target: '대상', stat: '', formula: '', direction: '감소' },
+      { name: '', target: '대상', change:'스탯', o_name: '', formula: '', direction: '감소' },
     ])
   }
 
@@ -58,11 +72,20 @@ export default function TagTab() {
             </select>
             <span className="text">의</span>
 
+            <select
+              value={tag.change}
+              onChange={(e) => setTag(idx, 'change', e.target.change)}
+              style={{ width: 100 }}
+            >
+              <option value="스탯">스탯</option>
+              <option value="상태">상태</option>
+            </select>
+
             <input
               type="text"
-              placeholder="스탯명"
-              value={tag.stat}
-              onChange={(e) => setTag(idx, 'stat', e.target.value)}
+              placeholder={tag.change == "스탯"? "스탯명" : "상태명"}
+              value={tag.o_name}
+              onChange={(e) => setTag(idx, 'o_name', e.target.value)}
               style={{ width: 120 }}
             />
             <span className="text">을</span>

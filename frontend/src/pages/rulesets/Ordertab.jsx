@@ -28,9 +28,9 @@ const BASE_BLOCKS = () => [
 ]
 
 const BLOCK_TYPES = [
-  { kind: 'state', label: '상태 블럭' },
-  { kind: 'skillCheck', label: '스킬 판정 블럭' },
-  { kind: 'skillResult', label: '결과 적용 블럭' },
+  { kind: 'state', label: '상태 적용' },
+  { kind: 'skillCheck', label: '선언 및 판정' },
+  { kind: 'skillResult', label: '결과 적용' },
 ]
 
 function makeBlock(kind) {
@@ -97,21 +97,6 @@ export async function postOrder(blocks) {
   }
   return res.json()
 }
-
-/* --------------------------------------------------------
-   블럭 박스 스타일 (고정/확정 블럭 공용)
-   -------------------------------------------------------- */
-// const boxStyle = {
-//   border: '2px solid var(--surface-soft)',
-//   borderRadius: 'var(--radius-md)',
-//   boxShadow: 'var(--shadow-soft)',
-//   padding: '14px 18px',
-// }
-
-// const confirmedStyle = {
-//   ...boxStyle,
-//   background: 'var(--surface-soft)',
-// }
 
 /* --------------------------------------------------------
    블럭 한 줄 렌더링
